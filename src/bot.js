@@ -36,6 +36,7 @@ const startOptions = {
 };
 
 // Configure http request for get stats
+// how to get rid of boilerplate code?? impossible i think...
 const statsOptions = {
     method: 'GET',
     url: `${url}/stats`,
@@ -45,6 +46,41 @@ const statsOptions = {
     },
     httpsAgent: agent,
 };
+
+async function getStats() {
+    try {
+        const response = await axios(statsOptions);
+        if (response.data.status === 'ok') {
+            const statsData = response.data.data;
+
+            const waitingStart = statsData.waiting_start;
+            const serverStatus = statsData.running;
+            const memoryUsage = statsData.mem;
+            const cpuUsage = statsData.cpu;
+            const playersOnline = statsData.online;
+            const maxPlayers = statsData.max;
+
+            return {
+                waitingStart,
+                serverStatus,
+                memoryUsage,
+                cpuUsage,
+                playersOnline,
+                maxPlayers,
+            };
+        } else {
+            throw new Error('Unexpected response status: ' + response.data.status);
+        }
+    } catch (error) {
+        console.error('Error getting stats:', error.message);
+        if (error.response) {
+            console.error('Response data:', error.response.data);
+            console.error('Response status:', error.response.status);
+            console.error('Response headers:', error.response.headers);
+        }
+        throw error;
+    }
+}
 
 client.on('ready', (c) => {
     console.log(`${c.user.tag} is online!`);
