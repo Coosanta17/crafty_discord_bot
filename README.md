@@ -31,9 +31,10 @@ It is assumed you have already made a bot and got its token. Also, you need to h
 
 #### Future Features:
 - Turn server off after period of time
+- Turn server off with a command (configurable)
 - Config file
-- Statistics
+- Statistics (players and stuff)
 - *suggestions are welcome!*
 
-#### LICENSE! 
-Read it! (License tab!!!!!!)
+#### LICENSE.
+Read it! (pls read if you want to do anything with it!!) (License tab!!!!!!)
