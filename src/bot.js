@@ -71,7 +71,7 @@ async function getStats() {
 				maxPlayers,
 			};
 		} else {
-			throw new Error('Unexpected response status: ' + status);
+			throw new Error('Unexpected response status from method getStats(): ' + status);
 		}
 	} catch (error) {
 		console.error('Error getting stats:', error.message);
