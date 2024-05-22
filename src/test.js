@@ -14,6 +14,16 @@ function dateTimeToSeconds(dateTime) {
 	return seconds;
 }
 
+function dateTimeToMilliseconds(dateTime) {
+	const date = new Date(dateTime);
+  
+	// Check if the date is valid
+	if (isNaN(date.getTime())) {
+	  throw new Error('Invalid date format');
+	}
+  
+	return date.getTime();
+}
 
 // Converts current time into "YYYY-MM-DD HH:MM:SS" format.
 function getCurrentDateTime() {
