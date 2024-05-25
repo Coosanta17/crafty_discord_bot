@@ -107,8 +107,8 @@ async function autoStop() {
     try {
         const stats = await getStats();
 
-		// checks if no players online, server is online and not starting, and server has been online for 30 minutes (+10ms to allow for possibly unprecise setInterval)
-        if (stats.playersOnline <= 0 && stats.running === true && stats.waitingStart === false && (Date.now() - dateTimeToMilliseconds(stats.startTime)) >= 1800010) {
+		// checks if no players online, server is online and not starting, and server has been online for 30 minutes (-10ms to allow for possibly unprecise setInterval)
+        if (stats.playersOnline <= 0 && stats.running === true && stats.waitingStart === false && (Date.now() - dateTimeToMilliseconds(stats.startTime)) >= 1799990) {
             console.log("Stopping server due to lack of activity...");
 
             const stopResponse = await axios(stopOptions);
