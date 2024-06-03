@@ -1,6 +1,6 @@
 # A Discord Bot to interact with [Crafty Controller](https://craftycontrol.com/)
 
-So far all it does is start the server.
+So far all it does is start *one* server.
 
 ## How to use
 It is assumed you have already made a bot and got its token. Also, you need to have made an API key for Crafty Controller, make sure the user that the key is based off has perms to the server.
@@ -15,7 +15,8 @@ It is assumed you have already made a bot and got its token. Also, you need to h
    ```env
    DISCORD_TOKEN=<token>
    CRAFTY_TOKEN=<token>
-   CRAFTY_SERVER_URL=https://localhost:8000/api/v2/servers/<server-id> # This URL is assuming you host it on the local machine with the default port
+   CRAFTY_SERVER_URL=https://localhost:8000/ # This URL is assuming you host it on the local machine with the default port (make sure to include the "/" at the end!)
+   CRAFTY_SERVER_ID=7010d5b8-cb49-4334-9d99-6f0ef860a672 # Example ID
    ```
 
 3. Run the bot using command
@@ -30,9 +31,11 @@ It is assumed you have already made a bot and got its token. Also, you need to h
 *I am learning JavaScript so if you find any errors or bad practice any help is appreciated.*
 
 #### Future Features:
-- Turn server off after period of time
+- ~~Turn server off after period of time~~ :white_check_mark:
 - Turn server off with a command (configurable)
 - Config file
+- Multiple servers
+- Channel binds for different servers
 - Statistics (players and stuff)
 - *suggestions are welcome!*
 
