@@ -8,7 +8,7 @@ const axios = require('axios');
 const https = require('https');
 
 const craftyToken = process.env.CRAFTY_TOKEN;
-const url = process.env.CRAFTY_SERVER_URL;
+const url = process.env.CRAFTY_SERVER_URL + "api/v2/servers/" + process.env.CRAFTY_SERVER_ID;
 
 const client = new Client({
     intents: [
@@ -59,6 +59,8 @@ const stopOptions = {
 };
 
 let dateTime = Date.now();
+let checkedLastLogout = false;
+let timeSinceLastLogout = dateTime;
 
 function dateTimeToMilliseconds(dateTime) {
     const date = new Date(dateTime);
@@ -75,7 +77,7 @@ function dateTimeToMilliseconds(dateTime) {
 async function getStats() {
     try {
         const response = await axios(statsOptions);
-		// console.log('Getting statistics of server...'); // Only use in development
+        // console.log('Getting statistics of server...'); // For debug purposes.
 
         if (response.data.status === 'ok') {
             return {
@@ -87,7 +89,9 @@ async function getStats() {
                 playersOnline: response.data.data.online,
                 maxPlayers: response.data.data.max,
                 // response,
-				...(response.data.data.started !== 'False' && { startTime: response.data.data.started }),
+                ...(response.data.data.started !== 'False' && {
+                    startTime: response.data.data.started
+                }),
             };
         } else {
             throw new Error('Unexpected response status from method getStats(): ' + response.data.status);
@@ -107,18 +111,23 @@ async function autoStop() {
     try {
         const stats = await getStats();
 
-		// checks if no players online, server is online and not starting, and server has been online for 30 minutes (-10ms to allow for possibly unprecise setInterval)
-        if (stats.playersOnline <= 0 && stats.running === true && stats.waitingStart === false && (Date.now() - dateTimeToMilliseconds(stats.startTime)) >= 1799990) {
-            console.log("Stopping server due to lack of activity...");
+        if (stats.playersOnline <= 0) {
+            if (checkedLastLogout === false) {
+                timeSinceLastLogout = Date.now();
+                checkedLastLogout = true;
+            } else if (stats.running === true && stats.waitingStart === false && (Date.now() - dateTimeToMilliseconds(stats.startTime)) >= 1799000 && (Date.now() - timeSinceLastLogout) >= 1800000) { // checks if no players online, server is online and not starting, server has been online for 30 minutes, and last player logged out more than 30 minutes ago (-1s to allow for possibly unprecise setInterval)
+                console.log("Stopping server due to lack of activity...");
 
-            const stopResponse = await axios(stopOptions);
+                const stopResponse = await axios(stopOptions);
 
-            if (stopResponse.data.status === 'ok') {
-                console.log("Success!");
-            } else {
-                console.log("Failed - Unexpected response:", stopResponse.data);
-            }
-        } // else console.log('not stopping!\n online for: ' + Math.floor(Date.now() - dateTimeToMilliseconds(stats.startTime)/1000) + ' seconds\n' + dateTimeToMilliseconds(stats.startTime)/1000 + '\n' + Math.floor(Date.now()/1000)); // Only use in development
+                if (stopResponse.data.status === 'ok') {
+                    console.log("Success!");
+                } else {
+                    console.log("Failed - Unexpected response:", stopResponse.data);
+                }
+            } // else console.log('not stopping!\n online for: ' + Math.floor(Date.now() - dateTimeToMilliseconds(stats.startTime)/1000) + ' seconds\n' + dateTimeToMilliseconds(stats.startTime)/1000 + '\n' + Math.floor(Date.now()/1000)); // Only use in development
+
+        }
 
     } catch (error) {
         console.error('Error making one or both requests:', error.message);
@@ -132,19 +141,10 @@ async function autoStop() {
 
 client.on('ready', (c) => {
     console.log(`${c.user.tag} is online!`);
-    const autoStopInterval = setInterval(autoStop, 1800000);
+    const autoStopInterval = setInterval(autoStop, 600000); // 10 minutes in milliseconds
 });
 
 client.on('messageCreate', async (message) => {
-    /*
-    // Message logger that i should probably delete but I like it though
-    if (message.author.bot) {
-        console.log(`[${message.createdAt}] ${message.author.tag} [Bot]: "${message.content}"`);
-        return;
-    }
-    else console.log(`[${message.createdAt}] ${message.author.tag}: "${message.content}"`);
-    */
-
     if (message.content === '>start') {
         console.log(`Attempting to start server with url ${url}/`);
 
