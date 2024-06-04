@@ -58,7 +58,7 @@ const stopOptions = {
     httpsAgent: agent,
 };
 
-let dateTime = Date.now();
+let dateTime = null;
 let checkedLastLogout = false;
 let timeSinceLastLogout = dateTime;
 
@@ -110,23 +110,32 @@ async function getStats() {
 async function autoStop() {
     try {
         const stats = await getStats();
+        const currentTime = Date.now();
 
-        if (stats.playersOnline <= 0) {
-            if (checkedLastLogout === false) {
-                timeSinceLastLogout = Date.now();
+        if (stats.playersOnline <= 0) { // if no one is online
+            if (!checkedLastLogout) {
+                timeSinceLastLogout = currentTime;
                 checkedLastLogout = true;
-            } else if (stats.running === true && stats.waitingStart === false && (Date.now() - dateTimeToMilliseconds(stats.startTime)) >= 1799000 && (Date.now() - timeSinceLastLogout) >= 1800000) { // checks if no players online, server is online and not starting, server has been online for 30 minutes, and last player logged out more than 30 minutes ago (-1s to allow for possibly unprecise setInterval)
-                console.log("Stopping server due to lack of activity...");
 
+            } else if ( // checks if no players online, server is online and not starting, server has been online for 30 minutes, last logout has been logged, and last player logged out more than 30 minutes ago (-1s to allow for possibly unprecise setInterval)
+                stats.running &&
+                !stats.waitingStart &&
+                (currentTime - dateTimeToMilliseconds(stats.startTime) >= 1799000) &&
+                (currentTime - timeSinceLastLogout >= 1800000)
+            ) {
+                console.log("Stopping server due to lack of activity...");
                 const stopResponse = await axios(stopOptions);
 
                 if (stopResponse.data.status === 'ok') {
                     console.log("Success!");
+                    checkedLastLogout = false;
                 } else {
                     console.log("Failed - Unexpected response:", stopResponse.data);
                 }
-            } // else console.log('not stopping!\n online for: ' + Math.floor(Date.now() - dateTimeToMilliseconds(stats.startTime)/1000) + ' seconds\n' + dateTimeToMilliseconds(stats.startTime)/1000 + '\n' + Math.floor(Date.now()/1000)); // Only use in development
-
+            } // else console.log('not stopping!\n online for: ' + Math.floor(Date.now() - dateTimeToMilliseconds(stats.startTime)/1000) + ' seconds\n' + dateTimeToMilliseconds(stats.startTime)/1000 + '\n' + Math.floor(Date.now()/1000)); // For debug purposes
+        } else { // If people are online then last logout hasn't happened anymore so must be reset.
+            checkedLastLogout = false;
+            timeSinceLastLogout = null;
         }
 
     } catch (error) {
@@ -139,39 +148,45 @@ async function autoStop() {
     }
 }
 
+async function serverStart(chatMessage) {
+    console.log(`Attempting to start server with url ${url}/`);
+
+    const message = chatMessage;
+
+    try {
+        const statsResponse = await getStats();
+        if (!statsResponse.running && !statsResponse.waitingStart) { // Checks if server offline
+            const startResponse = await axios(startOptions);
+            if (startResponse.data.status === 'ok') {
+                console.log('Success!');
+                await message.reply('Successfully sent request, the server will be starting soon!');
+            } else {
+                console.log('Unexpected response:', startResponse.data);
+                await message.reply('Unexpected result - Failed to start server!\n' + JSON.stringify(startResponse.data));
+            }
+        } else if (statsResponse.running || statsResponse.waitingStart) { // Runs with fail if server online
+            console.log('Failed - server already online');
+            await message.reply('The server is already online!');
+        }
+    } catch (error) {
+        console.error('Error making one or both requests:', error.message);
+        await message.reply('Failed to start server!\n' + error.message);
+        if (error.response) {
+            console.error('Response data:', error.response.data);
+            console.error('Response status:', error.response.status);
+            console.error('Response headers:', error.response.headers);
+        }
+    }
+}
+
 client.on('ready', (c) => {
     console.log(`${c.user.tag} is online!`);
-    const autoStopInterval = setInterval(autoStop, 600000); // 10 minutes in milliseconds
+    const autoStopInterval = setInterval(autoStop, 300000); // 5 minutes in milliseconds
 });
 
 client.on('messageCreate', async (message) => {
     if (message.content === '>start') {
-        console.log(`Attempting to start server with url ${url}/`);
-
-        try {
-            const statsResponse = await getStats();
-            if (statsResponse.running === false && statsResponse.waitingStart === false) { // Checks if server offline
-                const startResponse = await axios(startOptions);
-                if (startResponse.data.status === 'ok') {
-                    console.log('Success!');
-                    message.reply('Successfully sent request, the server will be starting soon!');
-                } else if (startResponse.status !== 'ok') {
-                    console.log('Unexpected response:', startResponse.data);
-                    message.reply('Unexpected result - Failed to start server!\n' + JSON.stringify(startResponse.data));
-                }
-            } else if (statsResponse.running === true || statsResponse.waitingStart === true) { // Runs with fail if server online
-                console.log('Failed - server already online');
-                message.reply('The server is already online!');
-            }
-        } catch (error) {
-            console.error('Error making one or both requests:', error.message);
-            message.reply('Failed to start server!\n' + error.message);
-            if (error.response) {
-                console.error('Response data:', error.response.data);
-                console.error('Response status:', error.response.status);
-                console.error('Response headers:', error.response.headers);
-            }
-        }
+        await serverStart(message);
     }
 });
 
