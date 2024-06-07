@@ -24,39 +24,20 @@ const agent = new https.Agent({
     rejectUnauthorized: false
 });
 
-// Configure http request for start server
-const startOptions = {
-    method: 'POST',
-    url: `${url}/action/start_server`,
+// Configure HTTP requests
+const requestOptions = (method, endpoint) => ({
+    method,
+    url: `${url}${endpoint}`,
     headers: {
         'Authorization': `bearer ${craftyToken}`,
         'Content-Type': 'application/json'
     },
     httpsAgent: agent,
-};
+});
 
-// Configure http request for get stats
-// how to get rid of boilerplate code?? impossible i think...
-const statsOptions = {
-    method: 'GET',
-    url: `${url}/stats`,
-    headers: {
-        'Authorization': `bearer ${craftyToken}`,
-        'Content-Type': 'application/json'
-    },
-    httpsAgent: agent,
-};
-
-// Configure http request for stop server
-const stopOptions = {
-    method: 'POST',
-    url: `${url}/action/stop_server`,
-    headers: {
-        'Authorization': `bearer ${craftyToken}`,
-        'Content-Type': 'application/json'
-    },
-    httpsAgent: agent,
-};
+const startOptions = requestOptions('POST', '/action/start_server');
+const statsOptions = requestOptions('GET', '/stats');
+const stopOptions = requestOptions('POST', '/action/stop_server');
 
 let dateTime = null;
 let checkedLastLogout = false;
@@ -159,18 +140,18 @@ async function serverStart(chatMessage) {
             const startResponse = await axios(startOptions);
             if (startResponse.data.status === 'ok') {
                 console.log('Success!');
-                await message.reply('Successfully sent request, the server will be starting soon!');
+                message.reply('Successfully sent request, the server will be starting soon!');
             } else {
                 console.log('Unexpected response:', startResponse.data);
-                await message.reply('Unexpected result - Failed to start server!\n' + JSON.stringify(startResponse.data));
+                message.reply('Unexpected result - Failed to start server!\n' + JSON.stringify(startResponse.data));
             }
         } else if (statsResponse.running || statsResponse.waitingStart) { // Runs with fail if server online
             console.log('Failed - server already online');
-            await message.reply('The server is already online!');
+            message.reply('The server is already online!');
         }
     } catch (error) {
         console.error('Error making one or both requests:', error.message);
-        await message.reply('Failed to start server!\n' + error.message);
+        message.reply('Failed to start server!\n' + error.message);
         if (error.response) {
             console.error('Response data:', error.response.data);
             console.error('Response status:', error.response.status);
@@ -186,7 +167,7 @@ client.on('ready', (c) => {
 
 client.on('messageCreate', async (message) => {
     if (message.content === '>start') {
-        await serverStart(message);
+        await serverStart(message); // not sure how awaiting will impact it...
     }
 });
 
