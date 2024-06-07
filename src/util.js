@@ -1,31 +1,17 @@
 const dateTime = getCurrentDateTime();
 
-function dateTimeToSeconds(dateTime) {
-	const date = new Date(dateTime);
-  
-	// Check if the date is valid
-	if (isNaN(date.getTime())) {
-	  throw new Error('Invalid date format');
-	}
-  
-	// Convert the date to seconds
-	const seconds = Math.floor(date.getTime() / 1000);
-  
-	return seconds;
+export function dateTimeToMilliseconds(dateTime) {
+    const date = new Date(dateTime);
+
+    // Check if the date is valid
+    if (isNaN(date.getTime())) {
+        throw new Error('Invalid date format');
+    }
+
+    return date.getTime();
 }
 
-function dateTimeToMilliseconds(dateTime) {
-	const date = new Date(dateTime);
-  
-	// Check if the date is valid
-	if (isNaN(date.getTime())) {
-	  throw new Error('Invalid date format');
-	}
-  
-	return date.getTime();
-}
-
-// Converts current time into "YYYY-MM-DD HH:MM:SS" format.
+// Converts current time into "YYYY-MM-DD HH:MM:SS" format. (unused)
 function getCurrentDateTime() {
     const now = new Date();
   
@@ -46,4 +32,4 @@ function getCurrentDateTime() {
   }
 
 //let dateSeconds = await dateTimeToSeconds(dateTime);
-console.log("turning dateTime: " + dateTime + " into seconds: " + dateTimeToSeconds(dateTime));
+//console.log("turning dateTime: " + dateTime + " into seconds: " + dateTimeToSeconds(dateTime));
