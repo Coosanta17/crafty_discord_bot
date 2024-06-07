@@ -1,11 +1,9 @@
-require('dotenv').config()
+import { Client, IntentsBitField } from 'discord.js';
+import axios from 'axios';
+import { Agent as HttpsAgent } from 'https';
 
-const {
-    Client,
-    IntentsBitField
-} = require('discord.js');
-const axios = require('axios');
-const https = require('https');
+import dotenv from 'dotenv';
+dotenv.config();
 
 const craftyToken = process.env.CRAFTY_TOKEN;
 const url = process.env.CRAFTY_SERVER_URL + "api/v2/servers/" + process.env.CRAFTY_SERVER_ID;
@@ -20,7 +18,7 @@ const client = new Client({
 });
 
 // Create an HTTPS agent that allows self-signed certificates
-const agent = new https.Agent({
+const agent = new HttpsAgent({
     rejectUnauthorized: false
 });
 
