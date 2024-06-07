@@ -93,30 +93,32 @@ async function autoStop() {
         const stats = await getStats();
         const currentTime = Date.now();
 
-        if (stats.playersOnline <= 0) { // if no one is online
-            if (!checkedLastLogout) {
-                timeSinceLastLogout = currentTime;
-                checkedLastLogout = true;
+        if (stats.running) { // none of the following means anything if server offline, so I put the check at the start.
+            if (stats.playersOnline <= 0) { // if no player is online
+                if (!checkedLastLogout) {
+                    timeSinceLastLogout = currentTime;
+                    checkedLastLogout = true;
 
-            } else if ( // checks if no players online, server is online and not starting, server has been online for 30 minutes, last logout has been logged, and last player logged out more than 30 minutes ago (-1s to allow for possibly unprecise setInterval)
-                stats.running &&
-                !stats.waitingStart &&
-                (currentTime - dateTimeToMilliseconds(stats.startTime) >= 1799000) &&
-                (currentTime - timeSinceLastLogout >= 1800000)
-            ) {
-                console.log("Stopping server due to lack of activity...");
-                const stopResponse = await axios(stopOptions);
+                } else if ( // checks if no players online, server is online and not starting, server has been online for 30 minutes, last logout has been logged, and last player logged out more than 30 minutes ago (-1s to allow for possibly unprecise setInterval)
+                    !stats.waitingStart &&
+                    (currentTime - dateTimeToMilliseconds(stats.startTime) >= 1799000) &&
+                    (currentTime - timeSinceLastLogout >= 1800000)
+                ) {
+                    console.log("Stopping server due to lack of activity...");
+                    const stopResponse = await axios(stopOptions);
 
-                if (stopResponse.data.status === 'ok') {
-                    console.log("Success!");
-                    checkedLastLogout = false;
-                } else {
-                    console.log("Failed - Unexpected response:", stopResponse.data);
-                }
-            } // else console.log('not stopping!\n online for: ' + Math.floor(Date.now() - dateTimeToMilliseconds(stats.startTime)/1000) + ' seconds\n' + dateTimeToMilliseconds(stats.startTime)/1000 + '\n' + Math.floor(Date.now()/1000)); // For debug purposes
-        } else { // If people are online then last logout hasn't happened anymore so must be reset.
-            checkedLastLogout = false;
-            timeSinceLastLogout = null;
+                    if (stopResponse.data.status === 'ok') {
+                        console.log("Success!");
+                        checkedLastLogout = false;
+                        timeSinceLastLogout = null;
+                    } else {
+                        console.log("Failed - Unexpected response:", stopResponse.data);
+                    }
+                } // else console.log('not stopping!\n online for: ' + Math.floor(Date.now() - dateTimeToMilliseconds(stats.startTime)/1000) + ' seconds\n' + dateTimeToMilliseconds(stats.startTime)/1000 + '\n' + Math.floor(Date.now()/1000)); // For debug purposes
+            } else { // If people are online then last logout hasn't happened anymore so must be reset.
+                checkedLastLogout = false;
+                timeSinceLastLogout = null;
+            }
         }
 
     } catch (error) {
