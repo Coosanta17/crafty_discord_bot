@@ -2,16 +2,16 @@ import axios from "axios";
 
 import { stopOptions } from "./client.js";
 import { getStats } from "./get_stats.js";
-import { dateTimeToMilliseconds, minutesToMilliseconds } from "../util.js";
+import { dateTimeToMilliseconds, minutesToMilliseconds, stopInterval } from "../util.js";
 
 const THIRTY_MINUTES = minutesToMilliseconds(30);
+const stats = await getStats();
 
 let checkedLastLogout = false;
 let timeSinceLastLogout = null;
 
 export async function autoStop() {
     try {
-        const stats = await getStats();
 
         if (!stats.running) {
             return; // Exit early if the server is not running.
@@ -39,7 +39,8 @@ export async function autoStop() {
         }
 
         console.log("Stopping server due to lack of activity...");
-        const stopResponse = await axios(stopOptions);
+
+        const stopResponse = await axios(stopOptions); // Call API to stop server.
 
         if (stopResponse.data.status !== 'ok') {
             console.log("Failed - Unexpected response:", stopResponse.data);
@@ -47,6 +48,9 @@ export async function autoStop() {
         }
 
         console.log("Success!");
+
+        stopInterval("autoStopInterval");
+        
         checkedLastLogout = false;
         timeSinceLastLogout = null;
 
