@@ -1,5 +1,5 @@
 import { discordClient as client } from "./api/client.js";
-import { autoStop, serverStart } from "./api/actions.js";
+import { autoStop, serverStart } from "./api/start_server.js";
 
 client.on('ready', (c) => {
     console.log(`${c.user.tag} is online!`);
