@@ -31,12 +31,12 @@ It is assumed you have already made a bot and got its token. Also, you need to h
 *I am learning JavaScript so if you find any errors or bad practice any help is appreciated.*
 
 #### Future Features:
-- ~~Turn server off after period of time~~ :white_check_mark:
-- Turn server off with a command (configurable)
-- Config file
-- Multiple servers
-- Channel binds for different servers
-- Statistics (players and stuff)
+- ~~Turn server off after period of time.~~ :white_check_mark:
+- Config file.
+- Turn server off with a command (configurable).
+- Handling multiple servers.
+- Channel binds for different servers.
+- Statistics (players and stuff) *\*maybe?\**.
 - *suggestions are welcome!*
 
 #### LICENSE.
