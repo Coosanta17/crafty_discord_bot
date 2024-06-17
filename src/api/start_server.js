@@ -26,7 +26,7 @@ export async function serverStart(message) {
         console.log('Success!');
         message.reply('Successfully sent request, the server will be starting soon!');
 
-        startInterval(autoStop, minutesToMilliseconds(2.5), "autoStopInterval");
+        startInterval(autoStop(), minutesToMilliseconds(2.5), "autoStopInterval");
 
     } catch (error) {
         console.error('Error making one or both requests:', error.message);
