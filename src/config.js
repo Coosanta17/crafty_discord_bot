@@ -1,8 +1,11 @@
 // This isn't the configuration file! Check for config.json in the root directory.
 
 import fs from 'fs';
+import path from 'path';
 
-const configPath = "./config.json";
+import { compareObjects, createJsonFile, mergeObjects, parseJsonFile, shutDown } from './util.js';
+
+const configPath = path.resolve(process.cwd(), 'config.json');
 const defaultConfig = {
     bot: {
         token: "BOT_TOKEN",
@@ -23,24 +26,30 @@ const defaultConfig = {
     }
 };
 
-async function createJsonFile(filePath, content) {
-    console.log("Creating configuration file...");
-    try {
-        fs.writeFileSync(filePath, JSON.stringify(content, null, 4), "utf-8");
-        console.log("Created config file.")
-    } catch (error) {
-        throw new Error('Error creating config file', error);
-    }
+async function updateConfig(filePath, updatedConfig) {
+    const existingConfig = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+    return mergeObjects(existingConfig, updatedConfig);
 }
 
 export async function checkConfigFile() {
     try {
         if (!fs.existsSync(configPath)) {
-            createJsonFile(configPath, defaultConfig);
+            console.log("No config file found, generating in working directory.")
+            await createJsonFile(configPath, defaultConfig);
+            console.log("Config file can be found at ./config.json\nPlease add Bot token, Crafty token and server URL to config file before restarting the bot.");
+            shutDown();
         }
-        return JSON.parse(fs.readFileSync(configPath, "utf-8")); // Syncronous because everything wont work without it.
+
+        let configFromFile = await parseJsonFile(configPath);
+
+        if (!compareObjects(configFromFile, defaultConfig)){
+            console.log("Outdated config.json detected - updating...");
+            configFromFile = await updateConfig(configPath, defaultConfig)
+        }
+
+        return configFromFile;
 
     } catch (error) {
-        console.error('Error checking config file:', error);
+        console.error("Error checking config file:", error);
     }
 }

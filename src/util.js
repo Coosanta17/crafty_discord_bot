@@ -1,4 +1,8 @@
-const intervals = {};
+// Some JavaScript boilerplate (c) Coosanta
+
+import fs from 'fs';
+
+// Time libraries:
 
 export function dateTimeToMilliseconds(dateTime) {
     const date = new Date(dateTime);
@@ -14,6 +18,8 @@ export function dateTimeToMilliseconds(dateTime) {
 export function minutesToMilliseconds(milliseconds) {
     return milliseconds * 60000;
 }
+
+const intervals = {};
 
 export function startInterval(callback, intervalTime, intervalID) {
     if (isIntervalRunning(intervalID)) {
@@ -43,62 +49,17 @@ export function isIntervalRunning(intervalID) {
 // JSON libraries:
 
 export async function createJsonFile(filePath, content) {
-    console.log("Creating configuration file...");
+    console.log("Creating JSON file...");
     try {
         fs.writeFileSync(filePath, JSON.stringify(content, null, 4), "utf-8");
-        console.log("Created config file.")
+        console.log("Success!")
     } catch (error) {
-        throw new Error('Error creating config file', error);
+        throw new Error('Error creating JSON file', error);
     }
 }
 
 export async function parseJsonFile(filePath){
-    return JSON.parse(fs.readFile(filePath, "utf-8"));
-}
-
-// Merges newData into existingData, including values.
-export function mergeJson(existingData, newData) {
-    for (const key in newData) {
-        if (!newData.hasOwnProperty(key)) {
-            return; // Exit early on inherited properties.
-        }
-        if (typeof newData[key] === 'object' && !Array.isArray(newData[key])) {
-            if (!existingData.hasOwnProperty(key)) {
-                existingData[key] = {};
-            }
-            mergeJson(existingData[key], newData[key]);
-        } else if (Array.isArray(newData[key])) {
-            existingData[key] = (existingData[key] || []).concat(newData[key]);
-        } else {
-            existingData[key] = newData[key];
-        }
-    }
-}
-
-function isObject(obj, key) {
-    return typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key]);
-}
-
-// Recursively merges objects without overwriting existing values from baseObj.
-export function mergeObjects(baseObj, newObj) {
-    for (const key in newObj) {
-        if (!newObj.hasOwnProperty(key)) {
-            continue; // Skip inherited properties
-        }
-
-        if (isObject(newObj, key)) { // The recursive part.
-            if (!baseObj.hasOwnProperty(key)) {
-                baseObj[key] = {};
-            }
-            mergeObjects(baseObj[key], newObj[key]);
-        }
-
-        if (!baseObj.hasOwnProperty(key)) { 
-            // runs only if key doesn't exist in baseObj.
-            baseObj[key] = newObj[key];
-        }
-
-    }
+    return JSON.parse(fs.readFileSync(filePath, "utf-8"));
 }
 
 function getObjectKeys(object, parentKey){
@@ -141,6 +102,38 @@ export function compareObjects(object1, object2) {
     return keys1.every((key, index) => key === keys2[index]); // Checks if all keys are the same, boolean result.
 }
 
+function isValidObject(obj, key) {
+    return typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key]);
+}
+
+// Recursively merges objects without overwriting existing values from baseObj.
+export function mergeObjects(baseObj, newObj) {
+    for (const key in newObj) {
+        if (!newObj.hasOwnProperty(key)) {
+            continue; // Skip inherited properties
+        }
+
+        if (isValidObject(newObj, key)) { // The recursive part.
+            if (!baseObj.hasOwnProperty(key)) {
+                baseObj[key] = {};
+            }
+            mergeObjects(baseObj[key], newObj[key]);
+        }
+
+        if (!baseObj.hasOwnProperty(key)) { 
+            // runs only if key doesn't exist in baseObj.
+            baseObj[key] = newObj[key];
+        }
+    }
+    return baseObj;
+}
+
+// Miscellaneous:
+
+export function shutDown() {
+    console.log("Shutting down...");
+    process.exit();
+}
 
 // Debug code below:
 /*
