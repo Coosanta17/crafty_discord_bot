@@ -75,23 +75,22 @@ export function mergeJson(existingData, newData) {
     }
 }
 
-function isValidObject(obj, key) {
+function isObject(obj, key) {
     return typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key]);
 }
 
-// Recursively merges objects without overwriting existing values.
+// Recursively merges objects without overwriting existing values from baseObj.
 export function mergeObjects(baseObj, newObj) {
     for (const key in newObj) {
         if (!newObj.hasOwnProperty(key)) {
             continue; // Skip inherited properties
         }
 
-        if (isValidObject(newObj, key)) { // I smell recursion...
+        if (isObject(newObj, key)) { // The recursive part.
             if (!baseObj.hasOwnProperty(key)) {
                 baseObj[key] = {};
             }
             mergeObjects(baseObj[key], newObj[key]);
-            return;
         }
 
         if (!baseObj.hasOwnProperty(key)) { 
@@ -100,18 +99,6 @@ export function mergeObjects(baseObj, newObj) {
         }
 
     }
-}
-
-// Returns true if objects are the same.
-export function compareObjects(object1, object2) {
-    let keys1 = getObjectKeys(object1);
-    let keys2 = getObjectKeys(object2);
-    
-    if (keys1.length !== keys2.length) {
-        return false;
-    }
-
-    return keys1.every((key, index) => key === keys2[index]); // Checks if all keys are the same, boolean result.
 }
 
 function getObjectKeys(object, parentKey){
@@ -142,6 +129,20 @@ function getObjectKeys(object, parentKey){
     return keys.sort();
 }
 
+// Returns true if objects are the same.
+export function compareObjects(object1, object2) {
+    let keys1 = getObjectKeys(object1);
+    let keys2 = getObjectKeys(object2);
+    
+    if (keys1.length !== keys2.length) {
+        return false;
+    }
+
+    return keys1.every((key, index) => key === keys2[index]); // Checks if all keys are the same, boolean result.
+}
+
+
+// Debug code below:
 /*
 const data1={a:1,b:2,c:{x:9,y:10,z:{zz:[1,2,3,4,5,6,7,8,9]}}};
 const data2={a:1,b:2,c:{x:9,y:10,m:12,z:{zz:[1,2,3,4,5,6,7,8,9],yy:[9,8,7,6,5,4,3,2,1]}},d:{f:"Foo",b:"Bar",t:{tt:{ttt:{tttt:7,ttttt:[6,2,7,9,4,2,5,8,9,7,4,2,1,4,7,8,6,4,8,9]}}}}};
@@ -152,15 +153,16 @@ let data2Str = JSON.stringify(data2, null, 4)
 console.log("data1: "+data1Str+"\n");
 console.log("data2: "+data2Str);
 */
-
+/*
 let obj1 = {a:1,b:{c:2,d:[3,4]},e:4}, obj2 = {a:10,b:{c:20,d:[30,40]},e:40,f:90}, obj3 = {a:1,b:{c:2,d:[3]},e:4};
-
-console.log(getObjectKeys(obj2)); // [ 'a', 'b', 'b.c', 'b.d', 'b.d[0]', 'b.d[1]', 'e' ]
-console.log(compareObjects(obj1, obj2)); // true
-console.log(compareObjects(obj1, obj3)); // false
 
 console.log(JSON.stringify(obj1, null, 4) + "\n\n~~~~\n\n" + JSON.stringify(obj2, null, 4)+"\n\n~~");
 mergeObjects(obj1,obj2);
 console.log("~~\n\n"+JSON.stringify(obj1, null, 4) + "\n\n~~~~\n\n" + JSON.stringify(obj2, null, 4));
 
+console.log(getObjectKeys(obj2)); // [ 'a', 'b', 'b.c', 'b.d', 'b.d[0]', 'b.d[1]', 'e' ]
+console.log(compareObjects(obj1, obj2)); // true
+console.log(compareObjects(obj1, obj3)); // false
+
 console.log(getObjectKeys(obj1));
+*/
