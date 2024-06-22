@@ -3,7 +3,7 @@ import axios from "axios";
 import { startOptions } from "./client.js";
 import { getStats } from "./get_stats.js";
 import { minutesToMilliseconds, startInterval } from "../util.js";
-import { autoStop } from "./stop_server.js";
+import { autoStop, setAutoStopInterval } from "./stop_server.js";
 
 export async function serverStart(message) {
     console.log(`Attempting to start server.`);
@@ -27,7 +27,7 @@ export async function serverStart(message) {
         console.log('Success!');
         message.reply('Successfully sent request, the server will be starting soon!');
 
-        startInterval(autoStop, minutesToMilliseconds(2.5), "autoStopInterval");
+        setAutoStopInterval();
 
     } catch (error) {
         console.error('Error making one or both requests:', error.message);

@@ -5,8 +5,15 @@ await checkConfigFile();
 const { discordClient } = await import("./api/client.js");
 const { serverStart } = await import("./api/start_server.js");
 const { getStats } = await import("./api/get_stats.js");
+const { setAutoStopInterval } = await import("./api/stop_server.js");
+const { isIntervalRunning } =  await import("./util.js");
 
-getStats(); // Test API ping
+let stats = await getStats(); // Test API ping, also has uses
+
+if (stats.running && !isIntervalRunning("autoStopInterval")) {
+    setAutoStopInterval();
+    console.debug("Restored existing or missing interval.");
+}
 
 discordClient.on('ready', (c) => {
     console.log(`${c.user.tag} is online!`);

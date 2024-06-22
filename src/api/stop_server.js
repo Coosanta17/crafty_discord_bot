@@ -2,13 +2,17 @@ import axios from "axios";
 
 import { stopOptions } from "./client.js";
 import { getStats } from "./get_stats.js";
-import { dateTimeToMilliseconds, minutesToMilliseconds, stopInterval } from "../util.js";
+import { dateTimeToMilliseconds, minutesToMilliseconds, startInterval, stopInterval } from "../util.js";
 
 const THIRTY_MINUTES = minutesToMilliseconds(30);
 const stats = await getStats();
 
 let checkedLastLogout = false;
 let timeSinceLastLogout = null;
+
+export function setAutoStopInterval() {
+    startInterval(autoStop, minutesToMilliseconds(2.5), "autoStopInterval");
+}
 
 export async function autoStop() {
     try {
