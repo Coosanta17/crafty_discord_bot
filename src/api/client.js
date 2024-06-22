@@ -1,8 +1,8 @@
 import { Agent as HttpsAgent } from 'https';
 import { Client, IntentsBitField } from 'discord.js';
 
-import dotenv from 'dotenv';
-dotenv.config();
+import { config } from '../config.js';
+import { addCharacterAtEndOfStringIfMissing } from '../util.js';
 
 export const discordClient = new Client({
     intents: [
@@ -13,8 +13,8 @@ export const discordClient = new Client({
     ],
 });
 
-const craftyToken = process.env.CRAFTY_TOKEN;
-export const url = process.env.CRAFTY_SERVER_URL + "api/v2/servers/" + process.env.CRAFTY_SERVER_ID;
+const craftyToken = config.crafty.api_token;
+export const url = addCharacterAtEndOfStringIfMissing(config.crafty.url, "/") + "api/v2/servers/" + config.crafty.server_id;
 
 // Create an HTTPS agent that allows self-signed certificates
 const agent = new HttpsAgent({

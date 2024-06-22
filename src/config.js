@@ -11,12 +11,13 @@ const defaultConfig = {
         token: "BOT_TOKEN",
     },
     crafty: {
-        token: "CRAFTY_TOKEN",
-        server_id: "7010d5b8-cb49-4334-9d99-6f0ef860a672",
+        api_token: "CRAFTY_TOKEN",
+        server_id: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        url: "https://localhost:8000/"
     },
     commands: {
         slash: {
-            enabled: true,
+            enabled: false,
             trigger: "start"
         },
         text: {
@@ -26,6 +27,9 @@ const defaultConfig = {
     }
 };
 
+let configFromFile;
+export { configFromFile as config };
+
 async function updateConfig(filePath, updatedConfig) {
     const existingConfig = JSON.parse(fs.readFileSync(filePath, "utf-8"));
     return mergeObjects(existingConfig, updatedConfig);
@@ -33,6 +37,11 @@ async function updateConfig(filePath, updatedConfig) {
 
 export async function checkConfigFile() {
     try {
+        if (configFromFile) {
+            console.debug("Config already checked.");
+            return configFromFile;
+        }
+
         if (!fs.existsSync(configPath)) {
             console.log("No config file found, generating in working directory.")
             await createJsonFile(configPath, defaultConfig);
@@ -40,11 +49,13 @@ export async function checkConfigFile() {
             shutDown();
         }
 
-        let configFromFile = await parseJsonFile(configPath);
+        configFromFile = await parseJsonFile(configPath);
 
         if (!compareObjects(configFromFile, defaultConfig)){
             console.log("Outdated config.json detected - updating...");
-            configFromFile = await updateConfig(configPath, defaultConfig)
+            const updatedConfig = await updateConfig(configPath, defaultConfig);
+            await createJsonFile(configPath, updatedConfig); // Overwrites existing file.
+            configFromFile = updatedConfig;
         }
 
         return configFromFile;

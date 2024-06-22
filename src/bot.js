@@ -1,18 +1,23 @@
-import { discordClient as client } from "./api/client.js";
-import { serverStart } from "./api/start_server.js";
-import { checkConfigFile } from "./config.js";
+import { checkConfigFile, config } from "./config.js";
+await checkConfigFile();
+// Import and run checkConfigFile() before all other imports to set config variable.
 
-const config = await checkConfigFile();
+const { discordClient } = await import("./api/client.js");
+const { serverStart } = await import("./api/start_server.js");
+const { getStats } = await import("./api/get_stats.js");
 
-client.on('ready', (c) => {
+getStats(); // Test API ping
+
+discordClient.on('ready', (c) => {
     console.log(`${c.user.tag} is online!`);
 });
 
-client.on('messageCreate', async (message) => {
-    if (message.content === '>start') {
+discordClient.on('messageCreate', async (message) => {
+    // text command
+    if (config.commands.text.enabled && message.content === config.commands.text.trigger) {
         await serverStart(message);
     }
 });
 
 
-client.login(config.bot.token);
+discordClient.login(config.bot.token);

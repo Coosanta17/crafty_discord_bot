@@ -135,6 +135,13 @@ export function shutDown() {
     process.exit();
 }
 
+export function addCharacterAtEndOfStringIfMissing(str, char) {
+    if (str.endsWith(char)) {
+        return str;
+    }
+    return str + char;
+}
+
 // Debug code below:
 /*
 const data1={a:1,b:2,c:{x:9,y:10,z:{zz:[1,2,3,4,5,6,7,8,9]}}};
