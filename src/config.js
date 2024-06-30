@@ -18,11 +18,10 @@ const defaultConfig = {
     commands: {
         slash: {
             enabled: false,
-            trigger: "start"
         },
         text: {
             enabled: false,
-            trigger: ">start"
+            prefix: "!"
         }
     }
 };

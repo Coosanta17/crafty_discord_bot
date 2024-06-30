@@ -8,7 +8,7 @@ const { getStats } = await import("./api/get_stats.js");
 const { setAutoStopInterval } = await import("./api/stop_server.js");
 const { isIntervalRunning } =  await import("./util.js");
 
-let stats = await getStats(); // Test API ping, also has uses
+let stats = await getStats(); // Tests if the api connection is working (+ other uses)
 
 if (stats.running && !isIntervalRunning("autoStopInterval")) {
     setAutoStopInterval();
@@ -20,9 +20,15 @@ discordClient.on('ready', (c) => {
 });
 
 discordClient.on('messageCreate', async (message) => {
-    // text command
-    if (config.commands.text.enabled && message.content === config.commands.text.trigger) {
+    if (!message.content.startsWith(config.commands.text.prefix)) {
+        return;
+    }
+
+    if (config.commands.text.enabled && message.content.substring(1).toLowerCase() === "start") {
         await serverStart(message);
+        //message.reply("I'm working!"); // debug
+    } else {
+        message.reply("Unknown command.");
     }
 });
 
