@@ -1,4 +1,3 @@
-import { Collection } from "discord.js";
 import { checkConfigFile, config } from "./config.js";
 await checkConfigFile();
 // Import and run checkConfigFile() before all other imports to set config variable.
@@ -10,8 +9,8 @@ const { getStats } = await import("./api/get_stats.js");
 const { setAutoStopInterval } = await import("./api/stop_server.js");
 const { isIntervalRunning } =  await import("./util.js");
 const start = await import("./commands/start.js");
-const { ActivityType } = await import("discord.js");
-const { loadCommands } = await import("./commands/load_commands.js");
+const { ActivityType, Collection, Events } = await import("discord.js");
+const { loadCommands } = await import("./load_commands.js");
 
 let stats = await getStats(); // Tests if the api connection is working (+ other uses)
 
@@ -42,7 +41,7 @@ discordClient.on('messageCreate', async (message) => {
 });
 
 
-client.on(Events.InteractionCreate, async (interaction) => {
+discordClient.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isChatInputCommand()) {
         return;
     }
