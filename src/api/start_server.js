@@ -2,8 +2,7 @@ import axios from "axios";
 
 import { startOptions } from "./client.js";
 import { getStats } from "./get_stats.js";
-import { minutesToMilliseconds, startInterval } from "../util.js";
-import { autoStop, setAutoStopInterval } from "./stop_server.js";
+import { setAutoStopInterval } from "./stop_server.js";
 
 export async function serverStart(message) {
     console.log(`Attempting to start server.`);
