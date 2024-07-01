@@ -4,7 +4,7 @@ import { startOptions } from "./client.js";
 import { getStats } from "./get_stats.js";
 import { setAutoStopInterval } from "./stop_server.js";
 
-export async function serverStart(message) {
+export async function serverStart() {
     console.log(`Attempting to start server.`);
 
     try {
@@ -12,30 +12,29 @@ export async function serverStart(message) {
 
         if (statsResponse.running || statsResponse.waitingStart) {
             console.log('Failed - server already online');
-            message.reply('The server is already online!');
-            return; // Exit early if server online.
+            return "The server is already online!"; // Exit early if server online.
         }
 
         const startResponse = await axios(startOptions); // Call API to start server.
 
         if (startResponse.data.status !== 'ok') {
-            message.reply('Unexpected result - Failed to start server!\n' + JSON.stringify(startResponse.data));
-            throw new Error('Failed - Unexpected response:', startResponse.data);
+            console.error('Failed to start server:', startResponse.data);
+            return ('Unexpected result - Failed to start server!\n' + JSON.stringify(startResponse.data))
         } 
 
         console.log('Success!');
-        message.reply('Successfully sent request, the server will be starting soon!');
 
         setAutoStopInterval();
 
+        return "Successfully sent request, the server will be starting soon!";
+
     } catch (error) {
         console.error('Error making one or both requests:', error.message);
-        message.reply('Failed to start server!\n' + error.message);
         if (error.response) {
             console.error('Response data:', error.response.data);
             console.error('Response status:', error.response.status);
             console.error('Response headers:', error.response.headers);
         }
-        throw error;
+        return ('An unexpected error occurred while starting the server.\n' + JSON.stringify(error.message));
     }
 }
