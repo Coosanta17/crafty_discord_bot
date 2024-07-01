@@ -8,6 +8,7 @@ const { getStats } = await import("./api/get_stats.js");
 const { setAutoStopInterval } = await import("./api/stop_server.js");
 const { isIntervalRunning } =  await import("./util.js");
 const { start } = await import("./commands/utility/start.js");
+const { ActivityType } = await import("discord.js");
 
 let stats = await getStats(); // Tests if the api connection is working (+ other uses)
 
@@ -18,7 +19,7 @@ if (stats.running && !isIntervalRunning("autoStopInterval")) {
 
 discordClient.on('ready', (c) => {
     c.application.commands.create(start);
-    c.user.setActivity("Servers", { type: "WATCHING" })
+    c.user.setActivity("servers", { type: ActivityType.Watching })
     console.log(`${c.user.tag} is online!`);
 });
 
