@@ -14,7 +14,6 @@ async function loadCommand(filePath) {
     try {
         const moduleUrl = pathToFileURL(filePath).href;
         const commandModule = await import(moduleUrl);
-        // Check if the module has a default export and use it if present
         const command = commandModule.default ? commandModule.default : commandModule;
         if ('data' in command && 'execute' in command) {
             return command;

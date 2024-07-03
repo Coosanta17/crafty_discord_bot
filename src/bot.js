@@ -1,3 +1,5 @@
+import { ActivityType, REST, Routes, Events } from 'discord.js';
+
 import { checkConfigFile, config } from "./config.js";
 await checkConfigFile();
 // Import and run checkConfigFile() before all other imports to set config variable.
@@ -7,9 +9,8 @@ const { discordClient } = await import("./api/client.js");
 const { serverStart } = await import("./api/start_server.js");
 const { getStats } = await import("./api/get_stats.js");
 const { setAutoStopInterval } = await import("./api/stop_server.js");
-const { isIntervalRunning } =  await import("./util.js");
+const { isIntervalRunning } = await import("./util.js");
 const start = await import("./commands/registry/start.js");
-const { ActivityType, Collection, Events } = await import("discord.js");
 const { loadCommands } = await import("./commands/load_commands.js");
 
 let stats = await getStats(); // Tests if the api connection is working (+ other uses)
@@ -21,8 +22,26 @@ if (stats.running && !isIntervalRunning("autoStopInterval")) {
     console.debug("Restored existing or missing interval.");
 }
 
-discordClient.on('ready', (c) => {
-    c.user.setActivity("servers", { type: ActivityType.Watching })
+
+discordClient.on('ready', async (c) => {
+    c.user.setActivity("servers", { type: ActivityType.Watching });
+    
+    // Deploy commands if necessary
+    const rest = new REST({ version: '10' }).setToken(config.bot.token);
+    try {
+        console.log('Started refreshing application (/) commands.');
+
+        const commandData = [...discordClient.commands.values()].map(command => command.data.toJSON());
+        await rest.put(
+            Routes.applicationCommands(discordClient.application.id),
+            { body: commandData }
+        );
+
+        console.log('Successfully reloaded application (/) commands.');
+    } catch (error) {
+        console.error(error);
+    }
+
     console.log(`${c.user.tag} is online!`);
 });
 
