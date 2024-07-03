@@ -8,14 +8,13 @@ const { serverStart } = await import("./api/start_server.js");
 const { getStats } = await import("./api/get_stats.js");
 const { setAutoStopInterval } = await import("./api/stop_server.js");
 const { isIntervalRunning } =  await import("./util.js");
-const start = await import("./commands/start.js");
+const start = await import("./commands/registry/start.js");
 const { ActivityType, Collection, Events } = await import("discord.js");
-const { loadCommands } = await import("./load_commands.js");
+const { loadCommands } = await import("./commands/load_commands.js");
 
 let stats = await getStats(); // Tests if the api connection is working (+ other uses)
 
-discordClient.commands = new Collection();
-await loadCommands(discordClient);
+discordClient.commands = await loadCommands();
 
 if (stats.running && !isIntervalRunning("autoStopInterval")) {
     setAutoStopInterval();
@@ -23,7 +22,6 @@ if (stats.running && !isIntervalRunning("autoStopInterval")) {
 }
 
 discordClient.on('ready', (c) => {
-    c.application.commands.create(start);
     c.user.setActivity("servers", { type: ActivityType.Watching })
     console.log(`${c.user.tag} is online!`);
 });
@@ -34,7 +32,7 @@ discordClient.on('messageCreate', async (message) => {
     }
 
     if (config.commands.text.enabled && message.content.substring(1).toLowerCase() === "start") {
-        message.reply(serverStart());
+        await message.reply(serverStart());
     } else {
         message.reply("Unknown command.");
     }

@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "discord.js";
-import { serverStart } from "../api/start_server.js";
+import { serverStart } from "../../api/start_server.js";
 
 export default {
   data: new SlashCommandBuilder()
