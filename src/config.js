@@ -1,11 +1,15 @@
-// This isn't the configuration file! Check for config.json in the root directory.
+// This isn't the configuration file! Check for config.json in the root directory. (../config.json)
 
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import { compareObjects, createJsonFile, mergeObjects, parseJsonFile, shutDown } from './util.js';
 
-const configPath = path.resolve(process.cwd(), 'config.json');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename); // Path to the current module.
+const configPath = path.resolve(__dirname, '..', 'config.json');
+
 const defaultConfig = {
     bot: {
         token: "BOT_TOKEN",
@@ -17,7 +21,7 @@ const defaultConfig = {
     },
     commands: {
         slash: {
-            enabled: false,
+            enabled: true,
         },
         text: {
             enabled: false,
@@ -44,7 +48,7 @@ export async function checkConfigFile() {
         if (!fs.existsSync(configPath)) {
             console.log("No config file found, generating in working directory.")
             await createJsonFile(configPath, defaultConfig);
-            console.log("Config file can be found at ./config.json\nPlease add Bot token, Crafty token and server URL to config file before restarting the bot.");
+            console.log(`Configuration file can be found at ${configPath}\nPlease add Bot token, Crafty token, server URL, and server id to the file before restarting the bot.`);
             shutDown();
         }
 

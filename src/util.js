@@ -49,12 +49,12 @@ export function isIntervalRunning(intervalID) {
 // JSON libraries:
 
 export async function createJsonFile(filePath, content) {
-    console.log("Creating JSON file...");
+    console.log(`Writing JSON file to ${filePath}...`);
     try {
         fs.writeFileSync(filePath, JSON.stringify(content, null, 4), "utf-8");
         console.log("Success!")
     } catch (error) {
-        throw new Error('Error creating JSON file', error);
+        throw new Error('Error writing JSON file', error);
     }
 }
 

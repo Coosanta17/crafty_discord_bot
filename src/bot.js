@@ -1,5 +1,4 @@
 import { ActivityType, REST, Routes, Events } from 'discord.js';
-import { help } from './commands/functions/help_reponse.js';
 
 import { checkConfigFile, config } from "./config.js";
 await checkConfigFile();
@@ -11,8 +10,8 @@ const { serverStart } = await import("./api/start_server.js");
 const { getStats } = await import("./api/get_stats.js");
 const { setAutoStopInterval } = await import("./api/stop_server.js");
 const { isIntervalRunning } = await import("./util.js");
-const start = await import("./commands/registry/start.js");
-const { loadCommands } = await import("./commands/load_commands.js");
+const { loadCommands } = await import("./commands/command_handler.js");
+const { help } = await import("./commands/functions/help_reponse.js");
 
 let stats = await getStats(); // Tests if the api connection is working (+ other uses)
 
