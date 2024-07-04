@@ -1,4 +1,5 @@
 import { ActivityType, REST, Routes, Events } from 'discord.js';
+import { help } from './commands/functions/help_reponse.js';
 
 import { checkConfigFile, config } from "./config.js";
 await checkConfigFile();
@@ -46,13 +47,17 @@ discordClient.on('ready', async (c) => {
 });
 
 discordClient.on('messageCreate', async (message) => {
-    if (!message.content.startsWith(config.commands.text.prefix)) {
-        return;
+    if (!message.content.startsWith(config.commands.text.prefix) || !config.commands.text.enabled) {
+        return; // Exit early if the message doesn't start with the prefix or text commands are disabled.
     }
-
-    if (config.commands.text.enabled && message.content.substring(1).toLowerCase() === "start") {
-        await message.reply(serverStart());
-    } else {
+    // only text commands beyond this point
+    const command = message.content.substring(1).toLowerCase();
+    if (command === "start") {
+        await message.reply(await serverStart());
+    } else if (command === "help") {
+        await message.reply(help(config.commands.text.prefix));
+    }
+    else {
         message.reply("Unknown command.");
     }
 });

@@ -15,11 +15,11 @@ async function loadCommand(filePath) {
         const moduleUrl = pathToFileURL(filePath).href;
         const commandModule = await import(moduleUrl);
         const command = commandModule.default ? commandModule.default : commandModule;
-        if ('data' in command && 'execute' in command) {
-            return command;
-        } else {
+        if (!('data' in command && 'execute' in command)) {
             console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
-        }
+            return;
+        } 
+        return command;
     } catch (error) {
         console.log(`[ERROR] Failed to load command at ${filePath}:`, error);
     }
@@ -30,8 +30,9 @@ export async function loadCommands() {
     const commandFolders = await fs.readdir(foldersPath, { withFileTypes: true });
     const commands = new Map();
 
+    // Iterate through all folders and files in the commands directory to load all commands.
     for (const folder of commandFolders) {
-        if (!folder.isDirectory()) continue;
+        if (!folder.isDirectory()) continue; // Skip files
 
         const commandsPath = path.join(foldersPath, folder.name);
         const commandFiles = await loadCommandFiles(commandsPath);
