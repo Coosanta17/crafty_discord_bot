@@ -1,12 +1,12 @@
-import { fileURLToPath, pathToFileURL } from 'url';
-import path from 'path';
-import fs from 'fs/promises';
+import { fileURLToPath, pathToFileURL } from "url";
+import path from "path";
+import fs from "fs/promises";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function loadCommandFiles(commandsPath) {
-    const commandFiles = (await fs.readdir(commandsPath)).filter(file => file.endsWith('.js'));
+    const commandFiles = (await fs.readdir(commandsPath)).filter(file => file.endsWith(".js"));
     return commandFiles.map(file => path.join(commandsPath, file));
 }
 
@@ -15,7 +15,7 @@ async function loadCommand(filePath) {
         const moduleUrl = pathToFileURL(filePath).href;
         const commandModule = await import(moduleUrl);
         const command = commandModule.default ? commandModule.default : commandModule;
-        if (!('data' in command && 'execute' in command)) {
+        if (!("data" in command && "execute" in command)) {
             console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
             return;
         } 
@@ -25,7 +25,7 @@ async function loadCommand(filePath) {
     }
 }
 
-export async function loadCommands() {
+async function loadCommands() {
     const foldersPath = path.join(__dirname);
     const commandFolders = await fs.readdir(foldersPath, { withFileTypes: true });
     const commands = new Map();
@@ -45,4 +45,13 @@ export async function loadCommands() {
         }
     }
     return commands;
+}
+
+let commandsCache;
+
+export async function getCommands() {
+    if (!commandsCache) {
+        commandsCache = await loadCommands();
+    }
+    return commandsCache;
 }

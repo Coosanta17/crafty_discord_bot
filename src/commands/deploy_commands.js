@@ -1,7 +1,7 @@
 // This file is responsible for deploying commands to the Discord API. It is run once when the bot starts up, and only deploys
 import { REST, Routes } from 'discord.js';
-import { config } from './config.js';
-import { loadCommands } from './commands/command_handler.js';
+import { config } from '../config.js';
+import { getCommands } from './command_handler.js';
 import deepEqual from 'deep-equal'; 
 
 async function fetchCurrentCommands() { // Fetches the current commands from the Discord API.
@@ -16,11 +16,11 @@ async function fetchCurrentCommands() { // Fetches the current commands from the
 }
 
 (async () => {
-    const commands = await loadCommands();
+    const commands = await getCommands();
     const rest = new REST({ version: '10' }).setToken(config.bot.token);
 
     try {
-        console.debug('Checking if application (/) commands need updating.');
+        console.debug('Checking if application (/) commands need updating...');
 
         const currentCommands = await fetchCurrentCommands();
 

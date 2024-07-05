@@ -10,13 +10,13 @@ const { serverStart } = await import("./api/start_server.js");
 const { getStats } = await import("./api/get_stats.js");
 const { setAutoStopInterval } = await import("./api/stop_server.js");
 const { isIntervalRunning } = await import("./util.js");
-const { loadCommands } = await import("./commands/command_handler.js");
+const { getCommands } = await import("./commands/command_handler.js");
 const { help } = await import("./commands/functions/help_reponse.js");
-await import("./commands/deploy_commands.js");
+await import("./commands/deploy_commands.js"); // Deploys commands to Discord API.
 
 let stats = await getStats(); // Tests if the api connection is working (+ other uses)
 
-discordClient.commands = await loadCommands();
+discordClient.commands = await getCommands();
 
 if (stats.running && !isIntervalRunning("autoStopInterval")) {
     setAutoStopInterval();
