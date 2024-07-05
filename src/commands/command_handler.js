@@ -18,7 +18,7 @@ async function loadCommand(filePath) {
         if (!("data" in command && "execute" in command)) {
             console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
             return;
-        } 
+        }
         return command;
     } catch (error) {
         console.log(`[ERROR] Failed to load command at ${filePath}:`, error);
@@ -26,22 +26,15 @@ async function loadCommand(filePath) {
 }
 
 async function loadCommands() {
-    const foldersPath = path.join(__dirname);
-    const commandFolders = await fs.readdir(foldersPath, { withFileTypes: true });
+    const registryPath = path.join(__dirname, "registry");
+    const commandFiles = await loadCommandFiles(registryPath);
     const commands = new Map();
 
-    // Iterate through all folders and files in the commands directory to load all commands.
-    for (const folder of commandFolders) {
-        if (!folder.isDirectory()) continue; // Skip files
-
-        const commandsPath = path.join(foldersPath, folder.name);
-        const commandFiles = await loadCommandFiles(commandsPath);
-
-        for (const filePath of commandFiles) {
-            const command = await loadCommand(filePath);
-            if (command) {
-                commands.set(command.data.name, command);
-            }
+    // Iterate through all files in the ./registry directory to load all commands.
+    for (const filePath of commandFiles) {
+        const command = await loadCommand(filePath);
+        if (command) {
+            commands.set(command.data.name, command);
         }
     }
     return commands;
