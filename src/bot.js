@@ -26,23 +26,6 @@ if (stats.running && !isIntervalRunning("autoStopInterval")) {
 
 discordClient.on("ready", async (c) => {
     c.user.setActivity("servers", { type: ActivityType.Watching });
-    
-    // Deploy commands if necessary
-    const rest = new REST({ version: "10" }).setToken(config.bot.token);
-    try {
-        console.log("Started refreshing application (/) commands.");
-
-        const commandData = [...discordClient.commands.values()].map(command => command.data.toJSON());
-        await rest.put(
-            Routes.applicationCommands(discordClient.application.id),
-            { body: commandData }
-        );
-
-        console.log("Successfully reloaded application (/) commands.");
-    } catch (error) {
-        console.error(error);
-    }
-
     console.log(`${c.user.tag} is online!`);
 });
 

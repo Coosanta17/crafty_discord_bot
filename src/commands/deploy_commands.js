@@ -4,10 +4,21 @@ import { config } from '../config.js';
 import { getCommands } from './command_handler.js';
 import deepEqual from 'deep-equal'; 
 
-async function fetchCurrentCommands() { // Fetches the current commands from the Discord API.
-    const rest = new REST({ version: '10' }).setToken(config.bot.token);
+const rest = new REST({ version: '10' }).setToken(config.bot.token);
+
+async function fetchApplicationInfo() {
     try {
-        const commands = await rest.get(Routes.applicationCommands(config.bot.clientId));
+        const appInfo = await rest.get(Routes.oauth2CurrentApplication());
+        return appInfo;
+    } catch (error) {
+        console.error('Error fetching application info:', error);
+        throw error;
+    }
+}
+
+async function fetchCurrentCommands(clientId) {
+    try {
+        const commands = await rest.get(Routes.applicationCommands(clientId));
         return commands;
     } catch (error) {
         console.error('Error fetching current commands:', error);
@@ -15,34 +26,53 @@ async function fetchCurrentCommands() { // Fetches the current commands from the
     }
 }
 
+function compareCommandArrays(arr1, arr2) { // Returns true if the two arrays are equal, false otherwise.
+    // Convert arr2 to a map for easier comparison.
+    const map = new Map();
+    arr2.forEach(item => {
+        map.set(item.name, item.description);
+    });
+
+    // Iterate over arr1 and check if the corresponding name and description match in arr2.
+    for (const item of arr1) {
+        const description = map.get(item.name);
+        if (description !== item.description) {
+            return false;
+        }
+    }
+    return true;
+}
+
 (async () => {
-    const commands = await getCommands();
-    const rest = new REST({ version: '10' }).setToken(config.bot.token);
-
     try {
-        console.debug('Checking if application (/) commands need updating...');
+        console.debug('Fetching application info...');
+        const appInfo = await fetchApplicationInfo();
+        const clientId = appInfo.id;
 
-        const currentCommands = await fetchCurrentCommands();
+        console.debug('Checking if application (/) commands need updating...');
+        const commands = await getCommands();
+        const currentCommands = await fetchCurrentCommands(clientId);
 
         // Convert local commands to JSON for comparison
         const localCommandData = [...commands.values()].map(command => command.data.toJSON());
 
         // Check if the local commands are different from the current commands
-        const needsUpdate = !deepEqual(currentCommands, localCommandData);
+        const needsUpdate = !compareCommandArrays(localCommandData, currentCommands);
+
+        console.log('Local commands:', localCommandData);
+        console.log('Current commands:', currentCommands);
 
         if (needsUpdate) {
-            console.log('Updating application (/) commands.');
-
+            console.log('Updating application (/) commands...');
             await rest.put(
-                Routes.applicationCommands(config.bot.clientId),
+                Routes.applicationCommands(clientId),
                 { body: localCommandData }
             );
-
             console.log('Successfully updated application (/) commands.');
+        } else {
+            console.debug('No update needed.');
         }
-        console.debug('No update needed.');
     } catch (error) {
         console.error(error);
     }
 })();
-
