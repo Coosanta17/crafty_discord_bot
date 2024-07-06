@@ -1,15 +1,15 @@
-import { REST, Routes } from 'discord.js';
-import { config } from '../config.js';
-import { getCommands } from './command_handler.js';
+import { REST, Routes } from "discord.js";
+import { config } from "../config.js";
+import { getCommands } from "./command_handler.js";
 
-const rest = new REST({ version: '10' }).setToken(config.bot.token);
+const rest = new REST({ version: "10" }).setToken(config.bot.token);
 
 async function fetchApplicationInfo() {
     try {
         const appInfo = await rest.get(Routes.oauth2CurrentApplication());
         return appInfo;
     } catch (error) {
-        console.error('Error fetching application info:', error);
+        console.error("Error fetching application info:", error);
         throw error;
     }
 }
@@ -19,7 +19,7 @@ async function fetchCurrentCommands(clientId) {
         const commands = await rest.get(Routes.applicationCommands(clientId));
         return commands;
     } catch (error) {
-        console.error('Error fetching current commands:', error);
+        console.error("Error fetching current commands:", error);
         return [];
     }
 }
@@ -48,11 +48,11 @@ function compareCommandArrays(arr1, arr2) {
 
 (async () => {
     try {
-        console.debug('Fetching application info...');
+        console.debug("Fetching application info...");
         const appInfo = await fetchApplicationInfo();
         const clientId = appInfo.id;
 
-        console.debug('Checking if application (/) commands need updating...');
+        console.debug("Checking if application (/) commands need updating...");
         const commands = await getCommands();
         const currentCommands = await fetchCurrentCommands(clientId);
 
@@ -63,14 +63,14 @@ function compareCommandArrays(arr1, arr2) {
         const needsUpdate = !compareCommandArrays(localCommandData, currentCommands);
 
         if (needsUpdate) {
-            console.log('Updating application (/) commands...');
+            console.log("Updating application (/) commands...");
             await rest.put(
                 Routes.applicationCommands(clientId),
                 { body: localCommandData }
             );
-            console.log('Successfully updated application (/) commands.');
+            console.log("Successfully updated application (/) commands.");
         } else {
-            console.debug('No update needed.');
+            console.debug("No update needed.");
         }
     } catch (error) {
         console.error(error);

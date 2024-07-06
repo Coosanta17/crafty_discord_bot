@@ -1,8 +1,8 @@
-import { Agent as HttpsAgent } from 'https';
-import { Client, IntentsBitField } from 'discord.js';
+import { Agent as HttpsAgent } from "https";
+import { Client, IntentsBitField } from "discord.js";
 
-import { config } from '../config.js';
-import { addCharacterAtEndOfStringIfMissing } from '../util.js';
+import { config } from "../config.js";
+import { addCharacterAtEndOfStringIfMissing } from "../util.js";
 
 export const discordClient = new Client({
     intents: [
@@ -26,12 +26,12 @@ const requestOptions = (method, endpoint) => ({
     method,
     url: `${url}${endpoint}`,
     headers: {
-        'Authorization': `bearer ${craftyToken}`,
-        'Content-Type': 'application/json'
+        "Authorization": `bearer ${craftyToken}`,
+        "Content-Type": "application/json"
     },
     httpsAgent: agent,
 });
 
-export const startOptions = requestOptions('POST', '/action/start_server');
-export const statsOptions = requestOptions('GET', '/stats');
-export const stopOptions = requestOptions('POST', '/action/stop_server');
+export const startOptions = requestOptions("POST", "/action/start_server");
+export const statsOptions = requestOptions("GET", "/stats");
+export const stopOptions = requestOptions("POST", "/action/stop_server");

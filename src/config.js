@@ -1,14 +1,14 @@
-// This isn't the configuration file! Check for config.json in the root directory. (../config.json)
+// This isn"t the configuration file! Check for config.json in the root directory. (../config.json)
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-import { compareObjects, createJsonFile, mergeObjects, parseJsonFile, shutDown } from './util.js';
+import { compareObjects, createJsonFile, mergeObjects, parseJsonFile, shutDown } from "./util.js";
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename); // Path to the current module.
-const configPath = path.resolve(__dirname, '..', 'config.json');
+const __dirname = path.dirname(__filename);
+const configPath = path.resolve(__dirname, "..", "config.json"); // ../config.json
 
 const defaultConfig = {
     bot: {

@@ -1,6 +1,6 @@
 // Some JavaScript boilerplate (c) Coosanta
 
-import fs from 'fs';
+import fs from "fs";
 
 // Time libraries:
 
@@ -9,7 +9,7 @@ export function dateTimeToMilliseconds(dateTime) {
 
     // Check if the date is valid
     if (isNaN(date.getTime())) {
-        throw new Error('Invalid date format');
+        throw new Error("Invalid date format");
     }
 
     return date.getTime();
@@ -54,7 +54,7 @@ export async function createJsonFile(filePath, content) {
         fs.writeFileSync(filePath, JSON.stringify(content, null, 4), "utf-8");
         console.log("Success!")
     } catch (error) {
-        throw new Error('Error writing JSON file', error);
+        throw new Error("Error writing JSON file", error);
     }
 }
 
@@ -103,7 +103,7 @@ export function compareObjects(object1, object2) {
 }
 
 function isValidObject(obj, key) {
-    return typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key]);
+    return typeof obj[key] === "object" && obj[key] !== null && !Array.isArray(obj[key]);
 }
 
 // Recursively merges objects without overwriting existing values from baseObj.
@@ -121,7 +121,7 @@ export function mergeObjects(baseObj, newObj) {
         }
 
         if (!baseObj.hasOwnProperty(key)) { 
-            // runs only if key doesn't exist in baseObj.
+            // runs only if key doesn"t exist in baseObj.
             baseObj[key] = newObj[key];
         }
     }
@@ -160,7 +160,7 @@ console.log(JSON.stringify(obj1, null, 4) + "\n\n~~~~\n\n" + JSON.stringify(obj2
 mergeObjects(obj1,obj2);
 console.log("~~\n\n"+JSON.stringify(obj1, null, 4) + "\n\n~~~~\n\n" + JSON.stringify(obj2, null, 4));
 
-console.log(getObjectKeys(obj2)); // [ 'a', 'b', 'b.c', 'b.d', 'b.d[0]', 'b.d[1]', 'e' ]
+console.log(getObjectKeys(obj2)); // [ "a", "b", "b.c", "b.d", "b.d[0]", "b.d[1]", "e" ]
 console.log(compareObjects(obj1, obj2)); // true
 console.log(compareObjects(obj1, obj3)); // false
 

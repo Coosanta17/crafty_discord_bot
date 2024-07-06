@@ -3,7 +3,7 @@ import { ActivityType, REST, Routes, Events } from "discord.js";
 import { checkConfigFile, config } from "./config.js";
 await checkConfigFile();
 // Import and run checkConfigFile() before all other imports to set config variable.
-// If this isn"t done, it will crash when creating config file for the first time.
+// If this isn"t done, it will crash.
 
 const { discordClient } = await import("./api/client.js");
 const { serverStart } = await import("./api/start_server.js");

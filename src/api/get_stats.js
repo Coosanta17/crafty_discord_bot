@@ -5,10 +5,10 @@ import { statsOptions } from "./client.js";
 export async function getStats() {
     try {
         const response = await axios(statsOptions);
-        //console.log('Getting statistics of server...'); // For debug purposes.
+        //console.log("Getting statistics of server..."); // For debug purposes.
 
-        if (response.data.status !== 'ok') {
-            throw new Error('Unexpected response status from method getStats(): ' + response.data.status);
+        if (response.data.status !== "ok") {
+            throw new Error("Unexpected response status from method getStats(): " + response.data.status);
         };
 
         return {
@@ -19,17 +19,17 @@ export async function getStats() {
             cpuUsage: response.data.data.cpu,
             playersOnline: response.data.data.online,
             maxPlayers: response.data.data.max,
-            ...(response.data.data.started !== 'False' && {
+            ...(response.data.data.started !== "False" && {
                 startTime: response.data.data.started
             }),
             //response,
         };
     } catch (error) {
-        console.error('Error getting stats:', error.message);
+        console.error("Error getting stats:", error.message);
         if (error.response) {
-            console.error('Response data:', error.response.data);
-            console.error('Response status:', error.response.status);
-            console.error('Response headers:', error.response.headers);
+            console.error("Response data:", error.response.data);
+            console.error("Response status:", error.response.status);
+            console.error("Response headers:", error.response.headers);
         }
         throw error;
     }

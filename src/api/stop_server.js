@@ -46,7 +46,7 @@ export async function autoStop() {
 
         const stopResponse = await axios(stopOptions); // Call API to stop server.
 
-        if (stopResponse.data.status !== 'ok') {
+        if (stopResponse.data.status !== "ok") {
             console.log("Failed - Unexpected response:", stopResponse.data);
             return;
         }
@@ -59,11 +59,11 @@ export async function autoStop() {
         timeSinceLastLogout = null;
 
     } catch (error) {
-        console.error('Error making one or both requests:', error.message);
+        console.error("Error making one or both requests:", error.message);
         if (error.response) {
-            console.error('Response data:', error.response.data);
-            console.error('Response status:', error.response.status);
-            console.error('Response headers:', error.response.headers);
+            console.error("Response data:", error.response.data);
+            console.error("Response status:", error.response.status);
+            console.error("Response headers:", error.response.headers);
         }
     }
 }

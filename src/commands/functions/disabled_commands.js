@@ -1,4 +1,4 @@
-import { config } from '../../config.js';
+import { config } from "../../config.js";
 
 export function commandsDisabled(command) {
     if (!config.slash.enabled) {
@@ -11,4 +11,5 @@ export function commandsDisabled(command) {
 
         disabledResponse = `Slash commands are disabled.\nTry \`${config.text.prefix}${command}\` instead`
         return disabledResponse;
-}}
+    }
+}
