@@ -1,8 +1,6 @@
-// This file is responsible for deploying commands to the Discord API. It is run once when the bot starts up, and only deploys
 import { REST, Routes } from 'discord.js';
 import { config } from '../config.js';
 import { getCommands } from './command_handler.js';
-import deepEqual from 'deep-equal'; 
 
 const rest = new REST({ version: '10' }).setToken(config.bot.token);
 
@@ -26,7 +24,12 @@ async function fetchCurrentCommands(clientId) {
     }
 }
 
-function compareCommandArrays(arr1, arr2) { // Returns true if the two arrays are equal, false otherwise.
+function compareCommandArrays(arr1, arr2) { 
+    // Returns true only if the two arrays are equal in length and have matching name and description in each object in the array, false otherwise.
+    if (arr1.length !== arr2.length) {
+        return false;
+    }
+
     // Convert arr2 to a map for easier comparison.
     const map = new Map();
     arr2.forEach(item => {
@@ -58,9 +61,6 @@ function compareCommandArrays(arr1, arr2) { // Returns true if the two arrays ar
 
         // Check if the local commands are different from the current commands
         const needsUpdate = !compareCommandArrays(localCommandData, currentCommands);
-
-        console.log('Local commands:', localCommandData);
-        console.log('Current commands:', currentCommands);
 
         if (needsUpdate) {
             console.log('Updating application (/) commands...');
