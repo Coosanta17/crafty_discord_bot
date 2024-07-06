@@ -1,6 +1,7 @@
-import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
 import fs from "fs/promises";
+import { fileURLToPath, pathToFileURL } from "url";
+import { commandsDisabled } from "./functions/disabled_commands.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,4 +48,13 @@ export async function getCommands() {
         commandsCache = await loadCommands();
     }
     return commandsCache;
+}
+
+export async function handleCommand(interaction, commandName, executeFunction) {
+    const areCommandsDisabled = commandsDisabled(commandName);
+    if (areCommandsDisabled) {
+        await interaction.reply({ content: areCommandsDisabled, ephemeral: true });
+        return;
+    }
+    await executeFunction(interaction);
 }

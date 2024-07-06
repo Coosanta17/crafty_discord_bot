@@ -3,7 +3,7 @@ import { ActivityType, REST, Routes, Events } from "discord.js";
 import { checkConfigFile, config } from "./config.js";
 await checkConfigFile();
 // Import and run checkConfigFile() before all other imports to set config variable.
-// If this isn"t done, it will crash.
+// If this isn't done, it will crash.
 
 const { discordClient } = await import("./api/client.js");
 const { serverStart } = await import("./api/start_server.js");
@@ -31,7 +31,7 @@ discordClient.on("ready", async (c) => {
 
 discordClient.on("messageCreate", async (message) => {
     if (!message.content.startsWith(config.commands.text.prefix) || !config.commands.text.enabled) {
-        return; // Exit early if the message doesn"t start with the prefix or text commands are disabled.
+        return; // Exit early if the message doesn't start with the prefix or text commands are disabled.
     }
     // only text commands beyond this point
     const command = message.content.substring(1).toLowerCase();

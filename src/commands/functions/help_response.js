@@ -8,7 +8,7 @@ export function help(prefix) {
         .addFields(
             { name: "START", value: `*Starts the server.*\nUsage: \`${prefix}start\`` },
             { name: "HELP", value: `*Shows the available commands.*\nUsage: \`${prefix}help\`` },
-            { name: "That"s all for now.", value: "*New features will be added soon!*" }
+            { name: "That's all for now.", value: "*New features will be added soon!*" }
         )
         // .setTimestamp();
 
