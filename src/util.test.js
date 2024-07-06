@@ -1,4 +1,9 @@
-function compareCommandArrays(arr1, arr2) { // Returns true if the two arrays are equal, false otherwise.
+function compareCommandArrays(arr1, arr2) { 
+    // Returns true if the two arrays are equal in length and have matching name and description in each object in the array, false otherwise.
+    if (arr1.length !== arr2.length) {
+        return false;
+    }
+
     // Convert arr2 to a map for easier comparison.
     const map = new Map();
     arr2.forEach(item => {
@@ -42,6 +47,8 @@ const arr16 = [
 ];
 console.log('3.', compareCommandArrays(arr15, arr16)); // Expected output: true
 
+console.log();
+
 // Test case 4: Names are different
 const arr7 = [
     { name: 'different command1', description: 'Description 1' },
@@ -51,7 +58,7 @@ const arr8 = [
     { name: 'command1', description: 'Description 1' },
     { name: 'command2', description: 'Description 2' },
 ];
-console.log('4.', compareCommandArrays(arr7, arr8)); // Expected output: true
+console.log('4.', compareCommandArrays(arr7, arr8)); // Expected output: false
 
 // Line break between true and false results
 
@@ -117,17 +124,118 @@ const arr20 = [
 ];
 console.log('10.', compareCommandArrays(arr19, arr20)); // Expected output: false
 
+console.log();
+
+// Test case 11: Extra values non matching, but matching name and description.
+const arr21 = [
+    { name: 'command1', description: 'Description 1' },
+    { name: 'command2', description: 'Description 2' },
+    { name: 'command3', description: 'Description 3' },
+];
+const arr22 = [
+    { name: 'command1', description: 'Description 1' },
+    { name: 'command2', description: 'Description 2' },
+];
+console.log('11.', compareCommandArrays(arr21, arr22)); // Expected output: false
+
+// Test case 12: Extra values matching, non matching name and description.
+const arr23 = [
+    { name: 'command1', description: 'Description 1' },
+    { name: 'command2', description: 'Description 2' },
+];
+const arr24 = [
+    { name: 'command1', description: 'Description 1' },
+    { name: 'command2', description: 'Description 2' },
+    { name: 'command3', description: 'Description 3' },
+];
+console.log('12.', compareCommandArrays(arr23, arr24)); // Expected output: false
+
+// Test case 13: Extra values nothing matching.
+const arr25 = [
+    { name: 'command1', description: 'Description 1', extra: 'Extra 1'},
+    { name: 'command2', description: 'Description 2', extra: 'Extra 2'},
+];
+const arr26 = [
+    { name: 'command3', description: 'Description 3', extra: 'Extra 3'},
+    { name: 'command4', description: 'Description 4', extra: 'Extra 4'},
+];
+console.log('13.', compareCommandArrays(arr25, arr26)); // Expected output: false
+
+// Test case 14: Extra values everything matching
+const arr27 = [
+    { name: 'command1', description: 'Description 1', extra: 'Extra 1'},
+    { name: 'command2', description: 'Description 2', extra: 'Extra 2'},
+];
+const arr28 = [
+    { name: 'command1', description: 'Description 1', extra: 'Extra 1'},
+    { name: 'command2', description: 'Description 2', extra: 'Extra 2'},
+];
+console.log('14.', compareCommandArrays(arr27, arr28)); // Expected output: true
+
+// Test case 15: Extra values in objects are different but names and descriptions match
+const arr29 = [
+    { name: 'command1', description: 'Description 1', extra: 'Extra 1'},
+    { name: 'command2', description: 'Description 2', extra: 'Extra 2'},
+];
+const arr30 = [
+    { name: 'command1', description: 'Description 1', extra: 'Extra 3'},
+    { name: 'command2', description: 'Description 2', extra: 'Extra 4'},
+];
+console.log('15.', compareCommandArrays(arr29, arr30)); // Expected output: true
+
+// Test case 16: Undefined values in extra objects
+const arr31 = [
+    { name: 'command1', description: 'Description 1', extra: undefined},
+    { name: 'command2', description: 'Description 2', extra: undefined},
+];
+const arr32 = [
+    { name: 'command1', description: 'Description 1', extra: 'defined'},
+    { name: 'command2', description: 'Description 2', extra: 'defined'},
+];
+console.log('16.', compareCommandArrays(arr31, arr32)); // Expected output: true
+
+// Test case 17: Null values in extra objects
+const arr33 = [
+    { name: 'command1', description: 'Description 1', extra: null},
+    { name: 'command2', description: 'Description 2', extra: null},
+];
+const arr34 = [
+    { name: 'command1', description: 'Description 1', extra: 'defined'},
+    { name: 'command2', description: 'Description 2', extra: 'defined'},
+];
+console.log('17.', compareCommandArrays(arr33, arr34)); // Expected output: true
+
+// Test case 18: Empty values in name and description
+const arr35 = [
+    { name: 'e', description: 'f'},
+    { name: 'g', description: 'h'},
+];
+const arr36 = [
+    { name: undefined, description: undefined},
+    { name: undefined, description: undefined},
+];
+console.log('18.', compareCommandArrays(arr35, arr36)); // Expected output: false
+
 /*
 Expected console output:
 1. true
 2. true
 3. true
-4. true // something wrong here
 
+4. false
 5. false
 6. false
 7. false
 8. false
 9. false
 10. false
+
+11. false
+12. false // Unexpected output.
+13. false
+14. true
+15. true
+16. true
+17. true
+18. false
 */
