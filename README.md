@@ -42,23 +42,23 @@ Here is the default configuration file:
 ```
 
 
-`bot.token` - The discord bot's token. Learn how to get one [here](https://www.youtube.com/watch?v=GvK-ZigEV4Q)
+- `bot.token` - The discord bot's token. Learn how to get one [here](https://www.youtube.com/watch?v=GvK-ZigEV4Q)
 
 
-`crafty:`
+- `crafty:`
 
-   `api_token` - The api token for [crafty controller user](https://docs.craftycontrol.com/pages/user-guide/user-role-config/#adding-a-role), make sure it has the COMMANDS permission and access to the server.
+  - `api_token` - The api token for [crafty controller user](https://docs.craftycontrol.com/pages/user-guide/user-role-config/#adding-a-role), make sure it has the COMMANDS permission and access to the server.
 
-   `server_id` - The [uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier) of the server. You can find it in the link to the server near the end.
+  - `server_id` - The [uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier) of the server. You can find it in the link to the server near the end.
 
-   `url` - The url to access the controller
+  - `url` - The url to access the controller
 
 
-`commmands:`
+- `commmands:`
 
-   `slash.enabled` - Whether slash commands are enabled, recommended `true`
+  - `slash.enabled` - Whether slash commands are enabled, recommended `true`
 
-   `text.enabled` and `text.prefix` - Whether text commands are enabled, for example, if prefix if set to `!`, help command would be `!help`
+  - `text.enabled` and `text.prefix` - Whether text commands are enabled, for example, if prefix if set to `!`, help command would be `!help`
 
 ### Commands
 `/start` - Starts the preconfigured server
