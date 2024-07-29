@@ -5,7 +5,7 @@ import { stopOptions } from "./client.js";
 import { getStats } from "./get_stats.js";
 import { dateTimeToMilliseconds, minutesToMilliseconds, startInterval, stopInterval } from "../util.js";
 
-const waitTime = minutesToMilliseconds(config.auto_stop.wait);
+const waitTime = minutesToMilliseconds(config.auto_stop.empty_wait_time);
 const checkInterval = config.auto_stop.check_interval;
 const stats = await getStats();
 
