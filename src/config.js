@@ -1,4 +1,4 @@
-// This isn"t the configuration file! Check for config.json in the root directory. (../config.json)
+// This isn't the configuration file! Check for config.json in the root directory. (../config.json)
 
 import fs from "fs";
 import path from "path";
@@ -27,6 +27,12 @@ const defaultConfig = {
             enabled: false,
             prefix: "!"
         }
+    },
+    auto_stop: {
+        enabled: true,
+        // times are in minutes
+        check_interval: 2.5,
+        empty_wait_time: 30
     }
 };
 
