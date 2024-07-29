@@ -31,8 +31,11 @@ const defaultConfig = {
     auto_stop: {
         enabled: true,
         // times are in minutes
-        check_interval: 2.5,
+        check_interval: 2,
         empty_wait_time: 30
+    },
+    stop_command: {
+        enabled: false,
     }
 };
 

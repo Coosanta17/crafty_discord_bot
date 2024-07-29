@@ -1,5 +1,7 @@
 import path from "path";
 import fs from "fs/promises";
+
+import { config } from "../config.js";
 import { fileURLToPath, pathToFileURL } from "url";
 import { commandsDisabled } from "./functions/disabled_commands.js";
 
@@ -34,6 +36,11 @@ async function loadCommands() {
     // Iterate through all files in the ./registry directory to load all commands.
     for (const filePath of commandFiles) {
         const command = await loadCommand(filePath);
+        if (command.data.name === "stop" && !config.stop_command.enabled) {
+            console.log("Stop command is disabled.");
+            continue;
+        }
+        
         if (command) {
             commands.set(command.data.name, command);
         }

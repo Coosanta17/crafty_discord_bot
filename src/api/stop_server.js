@@ -16,6 +16,20 @@ export function setAutoStopInterval() {
     startInterval(autoStop, minutesToMilliseconds(checkInterval), "autoStopInterval");
 }
 
+export async function serverStop() {
+    console.log("Stopping server...");
+
+    const stopResponse = await axios(stopOptions); // Call API to stop server.
+
+    if (stopResponse.data.status !== "ok") {
+        console.error("Failed - Unexpected response:", stopResponse.data);
+        return ("Unexpected result - Failed to stop server!\n" + JSON.stringify(stopResponse.data));
+    }
+
+    console.log("Success!");
+    return "Successfully sent request, the server will be offline soon!";
+}
+
 export async function autoStop() {
     try {
 
@@ -46,14 +60,7 @@ export async function autoStop() {
 
         console.log("Stopping server due to lack of activity...");
 
-        const stopResponse = await axios(stopOptions); // Call API to stop server.
-
-        if (stopResponse.data.status !== "ok") {
-            console.log("Failed - Unexpected response:", stopResponse.data);
-            return;
-        }
-
-        console.log("Success!");
+        await serverStop();
 
         stopInterval("autoStopInterval");
         
