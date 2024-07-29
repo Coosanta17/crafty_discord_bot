@@ -1,4 +1,4 @@
-import { ActivityType, REST, Routes, Events } from "discord.js";
+import { ActivityType, Events } from "discord.js";
 
 import { checkConfigFile, config } from "./config.js";
 await checkConfigFile();
