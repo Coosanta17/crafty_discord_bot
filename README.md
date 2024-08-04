@@ -20,7 +20,7 @@ The bot has been developed and tested in Node version `20.13.1`. Later versions 
    ```
 
 ### Configuration File
-Here is the default configuration file, it will be located one directory up from `./src`.:
+Here is the default configuration file, it will be located one directory up from `./src`:
 ```json
 {
     "bot": {
@@ -29,7 +29,7 @@ Here is the default configuration file, it will be located one directory up from
     "crafty": {
         "api_token": "CRAFTY_TOKEN",
         "server_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        "url": "https://localhost:8000/"
+        "url": "https://localhost:8443/"
     },
     "commands": {
         "slash": {
@@ -68,7 +68,7 @@ Here is the default configuration file, it will be located one directory up from
 
     - `slash.enabled` - Whether slash commands are enabled, recommended `true`
 
-    - `text.enabled` and `text.prefix` - Whether text commands are enabled, for example, if prefix if set to `!`, help command would be `!help`
+    - `text.enabled` and `text.prefix` - Whether text commands are enabled, for example, if prefix if set to `!`, help command would be `!help`. Can be useful if slash commands are not working or personal preference.
 
 - `auto_stop:`
 
@@ -78,7 +78,7 @@ Here is the default configuration file, it will be located one directory up from
 
     - `empty_wait_time` - How long (in minutes) the server needs to be empty before shutting down.
 
-- `stop command` - New Feature Coming soon!!
+- `stop_command.enabled` - Whether the `/stop` command is enabled or not. This will not override or replace auto stop if both are enabled. Permissions have not been set up yet so anyone can stop the server, however it is a future feature coming soon™!!
 
 
 ### Commands
@@ -90,10 +90,13 @@ Here is the default configuration file, it will be located one directory up from
 #### Future Features:
 - ~~Turn server off after period of time.~~ :white_check_mark:
 - ~~Config file.~~ :white_check_mark:
-- Turn server off with a command (configurable).
-- Handling multiple servers.
+- ~~Turn server off with a command (configurable).~~ :white_check_mark:
+- Permission settings for commands (may result in a config override)
+
+**Potential features although may not happen**
+- Handling multiple servers. 
 - Channel binds for different servers.
-- Statistics (players and stuff) *\*maybe?\**.
+- Statistics (players and stuff)
 - *suggestions are welcome!*
 
 #### LICENSE.
