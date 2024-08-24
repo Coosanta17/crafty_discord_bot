@@ -19,6 +19,13 @@ The bot has been developed and tested in Node version `20.13.1`. Later versions 
    node .
    ```
 
+3. Set up configuration file located in `./config.json` (see [Configuration File](#config)).
+
+5. Set up permissions and roles. In discord developer portal, in the bot tab under "Privileged Gateway Intents" allow "MESSAGE CONTENT INTENT". In Crafty Controller [set up a role](https://docs.craftycontrol.com/pages/user-guide/user-role-config/#adding-a-role) with api key, server access and COMMANDS permissions to the desired server.
+
+6. Start the bot (step 2).
+
+<a id="config"></a>
 ### Configuration File
 Here is the default configuration file, it will be located one directory up from `./src`:
 ```json
@@ -52,7 +59,7 @@ Here is the default configuration file, it will be located one directory up from
 ```
 
 
-- `bot.token` - The discord bot's token. Learn how to get one [here](https://www.youtube.com/watch?v=GvK-ZigEV4Q)
+- `bot.token` - The discord bot's token. Learn how to get one [here](https://www.youtube.com/watch?v=GvK-ZigEV4Q), make sure it has MESSAGE CONTENT INTENT allowed.
 
 
 - `crafty:`
