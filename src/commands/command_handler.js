@@ -1,8 +1,8 @@
 import path from "path";
 import fs from "fs/promises";
+import { fileURLToPath, pathToFileURL } from "url";
 
 import { config } from "../config.js";
-import { fileURLToPath, pathToFileURL } from "url";
 import { commandsDisabled } from "./functions/disabled_commands.js";
 
 const __filename = fileURLToPath(import.meta.url);
