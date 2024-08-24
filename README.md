@@ -21,7 +21,7 @@ The bot has been developed and tested in Node version `20.13.1`. Later versions 
 
 3. Set up configuration file located in `./config.json` (see [Configuration File](#config)).
 
-5. Set up permissions and roles. In discord developer portal, in the bot tab under "Privileged Gateway Intents" allow "MESSAGE CONTENT INTENT". In Crafty Controller [set up a role](https://docs.craftycontrol.com/pages/user-guide/user-role-config/#adding-a-role) with api key, server access and COMMANDS permissions to the desired server.
+5. Set up permissions and roles. In discord developer portal, in the bot tab under "Privileged Gateway Intents" allow "MESSAGE CONTENT INTENT". In Crafty Controller [set up a user with a role](https://docs.craftycontrol.com/pages/user-guide/user-role-config/#adding-a-role) that has api key, server access and COMMANDS permissions to the desired server.
 
 6. Start the bot (step 2).
 
