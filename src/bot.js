@@ -9,7 +9,7 @@ const { discordClient } = await import("./api/client.js");
 const { serverStart } = await import("./api/start_server.js");
 const { getStats } = await import("./api/get_stats.js");
 const { setAutoStopInterval } = await import("./api/stop_server.js");
-const { isIntervalRunning } = await import("./util.js");
+const { isIntervalRunning, log } = await import("./util.js");
 const { getCommands } = await import("./commands/command_handler.js");
 const { help } = await import("./commands/functions/help_response.js");
 await import("./commands/deploy_commands.js"); // Deploys commands to Discord API.
@@ -26,7 +26,7 @@ if (stats.running && !isIntervalRunning("autoStopInterval")) {
 
 discordClient.on("ready", async (c) => {
     c.user.setActivity("servers", { type: ActivityType.Watching });
-    console.log(`${c.user.tag} is online!`);
+    log(`${c.user.tag} is online!`);
 });
 
 discordClient.on("messageCreate", async (message) => {

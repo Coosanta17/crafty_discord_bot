@@ -1,6 +1,7 @@
 import { REST, Routes } from "discord.js";
 import { config } from "../config.js";
 import { getCommands } from "./command_handler.js";
+import { log } from "../util.js";
 
 const rest = new REST({ version: "10" }).setToken(config.bot.token);
 
@@ -63,12 +64,12 @@ function compareCommandArrays(arr1, arr2) {
         const needsUpdate = !compareCommandArrays(localCommandData, currentCommands);
 
         if (needsUpdate) {
-            console.log("Updating application (/) commands...");
+            log("Updating application (/) commands...");
             await rest.put(
                 Routes.applicationCommands(clientId),
                 { body: localCommandData }
             );
-            console.log("Successfully updated application (/) commands.");
+            log("Successfully updated application (/) commands.");
         } else {
             console.debug("No update needed.");
         }

@@ -28,7 +28,7 @@ export function startInterval(callback, intervalTime, intervalID) {
     }
 
     intervals[intervalID] = setInterval(callback, intervalTime);
-    console.log(`Interval "${intervalID}" started.`);
+    log(`Interval "${intervalID}" started.`);
 }
 
 export function stopInterval(intervalID) {
@@ -39,7 +39,7 @@ export function stopInterval(intervalID) {
 
     clearInterval(intervals[intervalID]);
     delete intervals[intervalID];
-    console.log(`Interval "${intervalID}" stopped.`);
+    log(`Interval "${intervalID}" stopped.`);
 }
 
 export function isIntervalRunning(intervalID) {
@@ -49,10 +49,10 @@ export function isIntervalRunning(intervalID) {
 // JSON libraries:
 
 export async function createJsonFile(filePath, content) {
-    console.log(`Writing JSON file to ${filePath}...`);
+    log(`Writing JSON file to ${filePath}...`);
     try {
         fs.writeFileSync(filePath, JSON.stringify(content, null, 4), "utf-8");
-        console.log("Success!")
+        log("Success!")
     } catch (error) {
         throw new Error("Error writing JSON file", error);
     }
@@ -131,7 +131,7 @@ export function mergeObjects(baseObj, newObj) {
 // Miscellaneous:
 
 export function shutDown() {
-    console.log("Shutting down...");
+    log("Shutting down...");
     process.exit();
 }
 
@@ -142,27 +142,35 @@ export function addCharacterAtEndOfStringIfMissing(str, char) {
     return str + char;
 }
 
+export function log(message) {
+    const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+    log(`[${time}]: ${message}`);
+}
+
 // Debug code below:
 /*
+
+log("Hello, world!");
+
 const data1={a:1,b:2,c:{x:9,y:10,z:{zz:[1,2,3,4,5,6,7,8,9]}}};
 const data2={a:1,b:2,c:{x:9,y:10,m:12,z:{zz:[1,2,3,4,5,6,7,8,9],yy:[9,8,7,6,5,4,3,2,1]}},d:{f:"Foo",b:"Bar",t:{tt:{ttt:{tttt:7,ttttt:[6,2,7,9,4,2,5,8,9,7,4,2,1,4,7,8,6,4,8,9]}}}}};
 
 mergeJson(data1, data2);
 let data1Str = JSON.stringify(data1, null, 4)
 let data2Str = JSON.stringify(data2, null, 4)
-console.log("data1: "+data1Str+"\n");
-console.log("data2: "+data2Str);
+log("data1: "+data1Str+"\n");
+log("data2: "+data2Str);
 */
 /*
 let obj1 = {a:1,b:{c:2,d:[3,4]},e:4}, obj2 = {a:10,b:{c:20,d:[30,40]},e:40,f:90}, obj3 = {a:1,b:{c:2,d:[3]},e:4};
 
-console.log(JSON.stringify(obj1, null, 4) + "\n\n~~~~\n\n" + JSON.stringify(obj2, null, 4)+"\n\n~~");
+log(JSON.stringify(obj1, null, 4) + "\n\n~~~~\n\n" + JSON.stringify(obj2, null, 4)+"\n\n~~");
 mergeObjects(obj1,obj2);
-console.log("~~\n\n"+JSON.stringify(obj1, null, 4) + "\n\n~~~~\n\n" + JSON.stringify(obj2, null, 4));
+log("~~\n\n"+JSON.stringify(obj1, null, 4) + "\n\n~~~~\n\n" + JSON.stringify(obj2, null, 4));
 
-console.log(getObjectKeys(obj2)); // [ "a", "b", "b.c", "b.d", "b.d[0]", "b.d[1]", "e" ]
-console.log(compareObjects(obj1, obj2)); // true
-console.log(compareObjects(obj1, obj3)); // false
+log(getObjectKeys(obj2)); // [ "a", "b", "b.c", "b.d", "b.d[0]", "b.d[1]", "e" ]
+log(compareObjects(obj1, obj2)); // true
+log(compareObjects(obj1, obj3)); // false
 
-console.log(getObjectKeys(obj1));
+log(getObjectKeys(obj1));
 */

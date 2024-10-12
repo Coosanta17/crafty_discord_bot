@@ -3,15 +3,16 @@ import axios from "axios";
 import { startOptions } from "./client.js";
 import { getStats } from "./get_stats.js";
 import { setAutoStopInterval } from "./stop_server.js";
+import { log } from "../util.js";
 
 export async function serverStart() {
-    console.log(`Attempting to start server.`);
+    log(`Attempting to start server.`);
 
     try {
         const statsResponse = await getStats();
 
         if (statsResponse.running || statsResponse.waitingStart) {
-            console.log("Failed - server already online");
+            log("Failed - server already online");
             return "The server is already online!"; // Exit early if server online.
         }
 
@@ -22,7 +23,7 @@ export async function serverStart() {
             return ("Unexpected result - Failed to start server!\n" + JSON.stringify(startResponse.data))
         } 
 
-        console.log("Success!");
+        log("Success!");
 
         setAutoStopInterval();
 

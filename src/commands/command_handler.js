@@ -4,6 +4,7 @@ import { fileURLToPath, pathToFileURL } from "url";
 
 import { config } from "../config.js";
 import { commandsDisabled } from "./functions/disabled_commands.js";
+import { log } from "../util.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,12 +20,12 @@ async function loadCommand(filePath) {
         const commandModule = await import(moduleUrl);
         const command = commandModule.default ? commandModule.default : commandModule;
         if (!("data" in command && "execute" in command)) {
-            console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+            log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
             return;
         }
         return command;
     } catch (error) {
-        console.log(`[ERROR] Failed to load command at ${filePath}:`, error);
+        log(`[ERROR] Failed to load command at ${filePath}:`, error);
     }
 }
 
@@ -37,7 +38,7 @@ async function loadCommands() {
     for (const filePath of commandFiles) {
         const command = await loadCommand(filePath);
         if (command.data.name === "stop" && !config.stop_command.enabled) {
-            console.log("Stop command is disabled.");
+            log("Stop command is disabled.");
             continue;
         }
         

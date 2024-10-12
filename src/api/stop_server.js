@@ -3,7 +3,7 @@ import axios from "axios";
 import { config } from "../config.js";
 import { stopOptions } from "./client.js";
 import { getStats } from "./get_stats.js";
-import { dateTimeToMilliseconds, minutesToMilliseconds, startInterval, stopInterval } from "../util.js";
+import { dateTimeToMilliseconds, minutesToMilliseconds, startInterval, stopInterval, log } from "../util.js";
 
 const waitTime = minutesToMilliseconds(config.auto_stop.empty_wait_time);
 const checkInterval = config.auto_stop.check_interval;
@@ -17,7 +17,7 @@ export function setAutoStopInterval() {
 }
 
 export async function serverStop() {
-    console.log("Stopping server...");
+    log("Stopping server...");
 
     const stopResponse = await axios(stopOptions); // Call API to stop server.
 
@@ -26,7 +26,7 @@ export async function serverStop() {
         return ("Unexpected result - Failed to stop server!\n" + JSON.stringify(stopResponse.data));
     }
 
-    console.log("Success!");
+    log("Success!");
     return "Successfully sent request, the server will be offline soon!";
 }
 
@@ -58,7 +58,7 @@ export async function autoStop() {
             return;
         }
 
-        console.log("Stopping server due to lack of activity...");
+        log("Stopping server due to lack of activity...");
 
         await serverStop();
 
