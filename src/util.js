@@ -144,7 +144,7 @@ export function addCharacterAtEndOfStringIfMissing(str, char) {
 
 export function log(message) {
     const time = new Date().toLocaleTimeString('en-US', { hour12: false });
-    log(`[${time}]: ${message}`);
+    console.log(`[${time}]: ${message}`);
 }
 
 // Debug code below:
