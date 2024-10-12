@@ -49,11 +49,11 @@ function compareCommandArrays(arr1, arr2) {
 
 (async () => {
     try {
-        console.debug("Fetching application info...");
+        log("Fetching application info...");
         const appInfo = await fetchApplicationInfo();
         const clientId = appInfo.id;
 
-        console.debug("Checking if application (/) commands need updating...");
+        log("Checking if application (/) commands need updating...");
         const commands = await getCommands();
         const currentCommands = await fetchCurrentCommands(clientId);
 
@@ -71,7 +71,7 @@ function compareCommandArrays(arr1, arr2) {
             );
             log("Successfully updated application (/) commands.");
         } else {
-            console.debug("No update needed.");
+            log("No update needed.");
         }
     } catch (error) {
         console.error(error);
